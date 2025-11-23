@@ -13,7 +13,19 @@
 
   <style>
     body { margin:0; overflow:hidden; }
-    
+
+    #title {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 10px 16px;
+      font-size: 18px;
+      border-radius: 8px;
+      z-index: 10;
+    }
   </style>
 
   <!-- Light Toggle Component -->
@@ -27,9 +39,15 @@
           this.isOn = !this.isOn;
 
           if (this.isOn) {
-            el.setAttribute('material', {emissive: "#ffffaa", emissiveIntensity: 1});
+            el.setAttribute('material', {
+              emissive: "#ffffaa",
+              emissiveIntensity: 1
+            });
           } else {
-            el.setAttribute('material', {emissive: "#000000", emissiveIntensity: 0});
+            el.setAttribute('material', {
+              emissive: "#000000",
+              emissiveIntensity: 0
+            });
           }
         });
       }
@@ -40,6 +58,7 @@
 
 <body>
 
+  <div id="title">✨ Turn On the Magic Light ✨</div>
 
   <a-scene
     embedded
@@ -50,16 +69,16 @@
     <a-entity camera></a-entity>
 
     <!-- NFT Marker -->
-    <a-nft
+    <a-nft 
       type="nft"
-      url="assets/markers/switch/switch"
+      url="switch"
       smooth="true"
       smoothCount="5"
       smoothTolerance="0.01"
       smoothThreshold="5">
 
-      <!-- Title text -->
-      <a-text 
+      <!-- Floating title -->
+      <a-text
         value="Turn on the magic light!"
         color="yellow"
         align="center"
@@ -70,7 +89,7 @@
       <!-- Light bulb model -->
       <a-entity
         id="bulb"
-        gltf-model="assets/models/lightbulb/scene.gltf"
+        gltf-model="scene.gltf"
         scale="0.35 0.35 0.35"
         position="0 0 0"
         toggle-light>
@@ -79,7 +98,6 @@
     </a-nft>
 
   </a-scene>
-
 
 </body>
 </html>

@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Magic Light – AR NFT</title>
+  <title>Room Light Surprise – AR NFT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-  <!-- AR.js NFT (working build) -->
+  <!-- AR.js NFT (working version) -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
@@ -29,145 +29,73 @@
     }
   </style>
 
-  <!-- Magic Light Interaction + Story Components -->
+  <!-- Interaction + Story Components -->
   <script>
-    // Component on the bulb – toggles emissive "light" and notifies the story manager
+    // Toggle light component
     AFRAME.registerComponent('toggle-light', {
       init: function () {
         const el = this.el;
         this.isOn = false;
-
-        // Make it clickable
         el.classList.add('clickable');
 
         el.addEventListener('click', () => {
           this.isOn = !this.isOn;
 
           if (this.isOn) {
-            el.setAttribute('material', {
-              emissive: '#ffffaa',
-              emissiveIntensity: 1
-            });
+            el.setAttribute('material', { emissive: '#ffffaa', emissiveIntensity: 1 });
+            el.sceneEl.emit('light-on');
           } else {
-            el.setAttribute('material', {
-              emissive: '#000000',
-              emissiveIntensity: 0
-            });
+            el.setAttribute('material', { emissive: '#000000', emissiveIntensity: 0 });
+            el.sceneEl.emit('light-off');
           }
-
-          // Inform the story manager that the bulb was toggled
-          el.sceneEl.emit('bulb-toggled', { isOn: this.isOn });
         });
       }
     });
 
-    // Component for the magic portal – handles clicks and emits an event
-    AFRAME.registerComponent('portal-door', {
+    // Cat interaction
+    AFRAME.registerComponent('cat-interaction', {
       init: function () {
         const el = this.el;
         el.classList.add('clickable');
 
         el.addEventListener('click', () => {
-          // Small pulse animation trigger
-          el.emit('pulse');
-          // Notify story manager
-          el.sceneEl.emit('portal-clicked');
+          el.emit('jump');
+          el.sceneEl.emit('cat-tapped');
         });
       }
     });
 
-    // Simple "fireflies" component to add motion (optional extra)
-    AFRAME.registerComponent('orbiting-fireflies', {
-      schema: { radius: { default: 0.6 } },
-      init: function () {
-        const el = this.el;
-        const r = this.data.radius;
-
-        // Create a few small glowing spheres
-        const count = 8;
-        for (let i = 0; i < count; i++) {
-          const angle = (Math.PI * 2 * i) / count;
-          const x = Math.cos(angle) * r;
-          const z = Math.sin(angle) * r;
-
-          const firefly = document.createElement('a-sphere');
-          firefly.setAttribute('radius', '0.03');
-          firefly.setAttribute('position', `${x} 0 ${z}`);
-          firefly.setAttribute('material', {
-            color: '#ffffaa',
-            emissive: '#ffffaa',
-            emissiveIntensity: 1
-          });
-
-          el.appendChild(firefly);
-        }
-
-        // Slow rotation animation around the Y axis
-        el.setAttribute('animation', {
-          property: 'rotation',
-          to: '0 360 0',
-          loop: true,
-          dur: 12000,
-          easing: 'linear'
-        });
-      }
-    });
-
-    // Story manager – controls phases of the narrative + visibility of objects
+    // Story Manager
     AFRAME.registerComponent('story-manager', {
       init: function () {
         const scene = this.el;
-        this.phase = 0; // 0 = dark, 1 = light awake, 2 = portal open, 3 = fireflies
+        this.phase = 0; // 0 = dark, 1 = light on, 2 = cat appears, 3 = interaction
 
-        this.storyText = document.querySelector('#storyText');
-        this.portal = document.querySelector('#portal');
-        this.fireflies = document.querySelector('#fireflies');
+        this.text = document.querySelector('#storyText');
+        this.cat = document.querySelector('#cat');
 
-        // Start with only the bulb visible; portal + fireflies hidden
-        if (this.portal) this.portal.setAttribute('visible', 'false');
-        if (this.fireflies) this.fireflies.setAttribute('visible', 'false');
-        if (this.storyText) {
-          this.storyText.setAttribute('value', 'Tap the bulb to wake the magic light.');
-        }
+        // Initial story
+        this.text.setAttribute('value', "Tap the bulb to turn on the room's light.");
 
-        // When the bulb is turned on for the first time, reveal the portal
-        scene.addEventListener('bulb-toggled', (evt) => {
-          const isOn = evt.detail && evt.detail.isOn;
-          if (!this.storyText) return;
-
-          if (isOn && this.phase === 0) {
+        // Light ON
+        scene.addEventListener('light-on', () => {
+          if (this.phase === 0) {
             this.phase = 1;
-            this.storyText.setAttribute(
-              'value',
-              'The light has awakened.\nNow tap the glowing portal to open a new world.'
-            );
-            if (this.portal) this.portal.setAttribute('visible', 'true');
-          } else if (!isOn && this.phase >= 0) {
-            this.storyText.setAttribute(
-              'value',
-              'The world goes dark again… tap the bulb to bring back the magic.'
-            );
+            this.text.setAttribute('value', "Nice! The room is lit.\nLook… someone appeared!");
+            this.cat.setAttribute('visible', true);
+            this.cat.emit('spawn');
           }
         });
 
-        // When the portal is clicked, bring in the fireflies and complete the ritual
-        scene.addEventListener('portal-clicked', () => {
-          if (!this.storyText) return;
+        // Light OFF
+        scene.addEventListener('light-off', () => {
+          this.text.setAttribute('value', "It's dark again… tap the bulb!");
+          this.cat.setAttribute('visible', false);
+        });
 
-          if (this.phase === 1) {
-            this.phase = 2;
-            this.storyText.setAttribute(
-              'value',
-              'The portal opens! Fireflies are flying in from the other side…'
-            );
-            if (this.fireflies) this.fireflies.setAttribute('visible', 'true');
-          } else if (this.phase === 2) {
-            this.phase = 3;
-            this.storyText.setAttribute(
-              'value',
-              'You completed the Magic Light ritual ✨\nEnjoy your enchanted room!'
-            );
-          }
+        // Cat clicked
+        scene.addEventListener('cat-tapped', () => {
+          this.text.setAttribute('value', "The cat likes you! Tap again!");
         });
       }
     });
@@ -177,7 +105,7 @@
 
 <body>
 
-  <div id="title">✨ Turn On the Magic Light ✨</div>
+  <div id="title">🐱 Room Light Surprise 🐱</div>
 
   <a-scene
     embedded
@@ -185,7 +113,7 @@
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
     story-manager>
 
-    <!-- Camera + mouse cursor so clicking works on desktop/mobile -->
+    <!-- Camera -->
     <a-entity camera>
       <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
     </a-entity>
@@ -193,23 +121,23 @@
     <!-- NFT Marker -->
     <a-nft 
       type="nft"
-      url="switch"
+      url="pat"
       smooth="true"
       smoothCount="5"
       smoothTolerance="0.01"
       smoothThreshold="5">
 
-      <!-- Narrative text inside the AR scene -->
+      <!-- Story text -->
       <a-text
         id="storyText"
-        value="Loading magic…"
+        value="Loading…"
         color="yellow"
         align="center"
         width="3"
         position="0 1.4 0">
       </a-text>
 
-      <!-- Light bulb model (first object) -->
+      <!-- Light bulb -->
       <a-entity
         id="bulb"
         gltf-model="scene.gltf"
@@ -218,23 +146,17 @@
         toggle-light>
       </a-entity>
 
-      <!-- Magic portal (second object, appears after bulb is on) -->
+      <!-- Cat (initially hidden) -->
       <a-entity
-        id="portal"
-        portal-door
-        geometry="primitive: torus; radius: 0.55; radiusTubular: 0.06"
-        material="color: #7fffd4; emissive: #7fffd4; emissiveIntensity: 0.9; metalness: 0.1; roughness: 0.2"
-        position="0 0.8 0"
-        rotation="90 0 0"
-        animation__spin="property: rotation; to: 90 360 0; loop: true; dur: 8000; easing: linear"
-        animation__pulse="property: scale; startEvents: pulse; from: 0.4 0.4 0.4; to: 0.55 0.55 0.55; dir: alternate; loop: 2; dur: 400">
-      </a-entity>
-
-      <!-- Fireflies (third “scene”, only visible after portal interaction) -->
-      <a-entity
-        id="fireflies"
-        position="0 1.2 0"
-        orbiting-fireflies="radius: 0.6">
+        id="cat"
+        gltf-model="cat.gltf"
+        scale="0.25 0.25 0.25"
+        position="0 -0.2 0"
+        rotation="0 180 0"
+        visible="false"
+        cat-interaction
+        animation__spawn="property: scale; from: 0 0 0; to: 0.25 0.25 0.25; dur: 600; easing: easeOutElastic"
+        animation__jump="property: position; from: 0 -0.2 0; to: 0 0.1 0; dir: alternate; dur: 300; startEvents: jump">
       </a-entity>
 
     </a-nft>

@@ -29,7 +29,6 @@
     }
   </style>
 
-  <!-- Interaction + Story Components -->
   <script>
     // Toggle light component
     AFRAME.registerComponent('toggle-light', {
@@ -40,12 +39,13 @@
 
         el.addEventListener('click', () => {
           this.isOn = !this.isOn;
-
           if (this.isOn) {
             el.setAttribute('material', { emissive: '#ffffaa', emissiveIntensity: 1 });
+            console.log('Light ON');
             el.sceneEl.emit('light-on');
           } else {
             el.setAttribute('material', { emissive: '#000000', emissiveIntensity: 0 });
+            console.log('Light OFF');
             el.sceneEl.emit('light-off');
           }
         });
@@ -59,6 +59,7 @@
         el.classList.add('clickable');
 
         el.addEventListener('click', () => {
+          console.log('Cat tapped');
           el.emit('jump');
           el.sceneEl.emit('cat-tapped');
         });
@@ -69,35 +70,45 @@
     AFRAME.registerComponent('story-manager', {
       init: function () {
         const scene = this.el;
-        this.phase = 0; // 0 = dark, 1 = light on, 2 = cat appears, 3 = interaction
+        this.phase = 0;
 
         this.text = document.querySelector('#storyText');
         this.cat = document.querySelector('#cat');
 
-        // Initial story
-        this.text.setAttribute('value', "Tap the bulb to turn on the room's light.");
+        this.text.setAttribute('value', "Point the camera at the blue pattern.\nThen tap the bulb to turn on the light.");
 
-        // Light ON
         scene.addEventListener('light-on', () => {
           if (this.phase === 0) {
             this.phase = 1;
-            this.text.setAttribute('value', "Nice! The room is lit.\nLook… someone appeared!");
+            this.text.setAttribute('value', "Nice! The room is lit.\nLook – a cat appeared!");
             this.cat.setAttribute('visible', true);
             this.cat.emit('spawn');
           }
         });
 
-        // Light OFF
         scene.addEventListener('light-off', () => {
           this.text.setAttribute('value', "It's dark again… tap the bulb!");
           this.cat.setAttribute('visible', false);
         });
 
-        // Cat clicked
         scene.addEventListener('cat-tapped', () => {
           this.text.setAttribute('value', "The cat likes you! Tap again!");
         });
       }
+    });
+
+    // Marker debug
+    window.addEventListener('load', () => {
+      const marker = document.querySelector('#marker');
+      if (!marker) return;
+
+      marker.addEventListener('markerFound', () => {
+        console.log('MARKER FOUND ✅');
+      });
+
+      marker.addEventListener('markerLost', () => {
+        console.log('MARKER LOST ❌');
+      });
     });
   </script>
 
@@ -120,6 +131,7 @@
 
     <!-- NFT Marker -->
     <a-nft 
+      id="marker"
       type="nft"
       url="pat"
       smooth="true"
@@ -134,15 +146,15 @@
         color="yellow"
         align="center"
         width="3"
-        position="0 1.4 0">
+        position="0 1.5 0">
       </a-text>
 
       <!-- Light bulb -->
       <a-entity
         id="bulb"
         gltf-model="scene.gltf"
-        scale="0.35 0.35 0.35"
-        position="0 0 0"
+        scale="0.7 0.7 0.7"
+        position="0 0.2 0"
         toggle-light>
       </a-entity>
 
@@ -150,13 +162,13 @@
       <a-entity
         id="cat"
         gltf-model="cat.gltf"
-        scale="0.25 0.25 0.25"
-        position="0 -0.2 0"
+        scale="0.4 0.4 0.4"
+        position="0 -0.1 0"
         rotation="0 180 0"
         visible="false"
         cat-interaction
-        animation__spawn="property: scale; from: 0 0 0; to: 0.25 0.25 0.25; dur: 600; easing: easeOutElastic"
-        animation__jump="property: position; from: 0 -0.2 0; to: 0 0.1 0; dir: alternate; dur: 300; startEvents: jump">
+        animation__spawn="property: scale; from: 0 0 0; to: 0.4 0.4 0.4; dur: 600; easing: easeOutElastic"
+        animation__jump="property: position; from: 0 -0.1 0; to: 0 0.15 0; dir: alternate; dur: 300; startEvents: jump">
       </a-entity>
 
     </a-nft>

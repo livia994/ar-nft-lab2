@@ -144,22 +144,74 @@
 
         <!-- STEP 3 — HUGE PORTAL -->
         <a-entity id="panel" position="0 4.3 0" scale="6 6 6" visible="false">
+
+          <!-- Outer rotating ring -->
           <a-ring
-            radius-inner="2.4"
-            radius-outer="4.2"
+            radius-inner="2.5"
+            radius-outer="3.8"
             color="#00FFFF"
-            material="emissive: #00FFFF; emissiveIntensity: 1.2; opacity: 0.9;"
-            animation="property: rotation; to: 0 0 360; loop: true; dur: 3000"
+            material="emissive: #00FFFF; emissiveIntensity: 1.2; opacity: 0.85;"
+            animation="property: rotation; to: 0 0 360; loop: true; dur: 4000"
           ></a-ring>
 
+          <!-- Pulsing aura -->
+          <a-torus
+            radius="3.2"
+            radius-tubular="0.18"
+            color="#44FFFF"
+            material="emissive: #33DDFF; emissiveIntensity: 1.4; opacity: 0.6;"
+            animation="property: scale; dir: alternate; loop: true; dur: 1800; to: 1.2 1.2 1.2; from: 1 1 1"
+          ></a-torus>
+
+          <!-- Inner swirling energy -->
+          <a-circle
+            radius="2.2"
+            rotation="90 0 0"
+            color="#0099FF"
+            material="emissive: #66CCFF; emissiveIntensity: 1.3; opacity: 0.85;"
+            animation="property: rotation; to: 0 0 360; dur: 2500; loop: true"
+          ></a-circle>
+
+          <!-- Subtle color pulse to make portal alive -->
+          <a-circle
+            radius="1.7"
+            rotation="90 0 0"
+            color="#AAFFFF"
+            material="emissive: #88FFFF; emissiveIntensity: 1.4; opacity: 0.7;"
+            animation="property: color; from: #AAFFFF; to: #FF99FF; loop: true; dur: 1800"
+          ></a-circle>
+
+          <!-- Floating glowing particles -->
+          <a-entity id="particles">
+            <a-sphere radius="0.1" color="#FFFFFF"
+              material="emissive:#FFFFFF; emissiveIntensity:1.2; opacity:0.9;"
+              position="1.2 0.8 0"
+              animation="property: position; to:-1.2 1.2 0; loop:true; dur: 3000; dir:alternate">
+            </a-sphere>
+
+            <a-sphere radius="0.08" color="#88FFFF"
+              material="emissive:#88FFFF; emissiveIntensity:1.4; opacity:0.8;"
+              position="-0.8 -0.2 0.3"
+              animation="property: position; to:0.8 -1.1 0.3; loop:true; dur: 2600; dir:alternate">
+            </a-sphere>
+
+            <a-sphere radius="0.06" color="#FFAAFF"
+              material="emissive:#FFAAFF; emissiveIntensity:1.6; opacity:0.8;"
+              position="0.5 -0.6 -0.3"
+              animation="property: position; to:-0.5 -1.2 -0.3; loop:true; dur: 2200; dir:alternate">
+            </a-sphere>
+          </a-entity>
+
           <a-text
-            value="The jellyfish opens a portal."
+            value="The jellyfish tears open reality."
             align="center"
             width="10"
-            position="0 -1.3 1"
+            position="0 -1.4 1"
             color="#FFFFFF"
           ></a-text>
+
         </a-entity>
+
 
       </a-nft>
 

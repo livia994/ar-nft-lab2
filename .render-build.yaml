@@ -1,0 +1,7 @@
+services:
+  - type: static
+    name: ar-nft
+    routes:
+      - type: static
+        static_publish_path: "/"
+        gzip: false

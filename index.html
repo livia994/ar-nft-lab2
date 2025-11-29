@@ -21,21 +21,23 @@
         position: fixed;
         top: 10px;
         left: 10px;
-        max-width: 280px;
-        padding: 10px 14px;
+        max-width: 300px;
+        padding: 12px 16px;
         background: rgba(0, 0, 0, 0.55);
         color: #ffffff;
-        border-radius: 10px;
+        border-radius: 12px;
         z-index: 10;
+        backdrop-filter: blur(6px);
       }
 
       #ui h1 {
         margin: 0 0 4px;
-        font-size: 16px;
+        font-size: 17px;
+        font-weight: 600;
       }
 
       #ui p {
-        margin: 2px 0;
+        margin: 3px 0;
         font-size: 13px;
         line-height: 1.3;
       }
@@ -51,18 +53,18 @@
     <!-- UI PANEL -->
     <div id="ui">
       <h1>Blooming Worlds</h1>
-      <p>Point your camera at the painting marker. Then tap to evolve the world.</p>
-      <p id="story">Step 1 — A golden seed appears from the painting.</p>
-      <small>Tip: move around the marker to see shapes from different angles.</small>
+      <p>The painting awakens when you look at it.</p>
+      <p id="story">Step 1 — A golden seed rises. Tap to evolve.</p>
+      <small>Move around the marker to explore the shapes.</small>
     </div>
 
     <a-scene
       embedded
-      renderer="logarithmicDepthBuffer: true;"
+      renderer="logarithmicDepthBuffer: true; colorManagement: true;"
       vr-mode-ui="enabled: false"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-    >
-
+      >
+      
       <!-- NFT MARKER -->
       <a-nft
         type="nft"
@@ -75,41 +77,54 @@
         id="marker"
       >
 
-        <!-- OBJECT 1 — SEED -->
-        <a-entity id="obj1" position="0 1 0" scale="1.8 1.8 1.8" visible="true">
+        <!-- 🌟 OBJECT 1 — LARGE FLOATING SEED -->
+        <a-entity id="obj1" position="0 2.5 0" scale="3.5 3.5 3.5" visible="true">
           <a-cone
-            height="1.2"
-            radius-bottom="0.8"
+            height="2.2"
+            radius-bottom="1.4"
             color="#FFD700"
-            animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
-            animation__float="property: position; dir: alternate; dur: 1500; loop: true; to: 0 1.3 0; from: 0 1 0"
+            material="emissive: #FFDD33; emissiveIntensity: 0.4;"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 3500"
+            animation__float="property: position; dir: alternate; dur: 1600; loop: true; to: 0 2.8 0; from: 0 2.5 0"
           ></a-cone>
         </a-entity>
 
-        <!-- OBJECT 2 — LIVING SPHERE -->
-        <a-entity id="obj2" position="0 1 0" scale="1.8 1.8 1.8" visible="false">
+        <!-- 🌌 OBJECT 2 — PULSING SPHERE WITH AURA -->
+        <a-entity id="obj2" position="0 2.5 0" scale="3.5 3.5 3.5" visible="false">
           <a-sphere
-            radius="0.7"
-            color="#3366FF"
-            animation="property: color; from: #3366FF; to: #FF33AA; loop: true; dur: 2000"
-            animation__pulse="property: scale; dir: alternate; dur: 1500; loop: true; to: 2 2 2; from: 1.5 1.5 1.5"
+            radius="1.3"
+            color="#5588FF"
+            material="emissive: #AA33FF; emissiveIntensity: 0.5; opacity: 0.95;"
+            animation="property: color; from: #5588FF; to: #FF33AA; loop: true; dur: 2000"
+            animation__pulse="property: scale; dir: alternate; dur: 1700; loop: true; to: 4 4 4; from: 3.2 3.2 3.2"
           ></a-sphere>
+
+          <!-- Aura ring -->
+          <a-torus
+            radius="2.5"
+            radius-tubular="0.08"
+            color="#FF33AA"
+            material="opacity: 0.4; emissive: #FF33AA; emissiveIntensity: 0.6;"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 5500"
+            position="0 0 0"
+          ></a-torus>
         </a-entity>
 
-        <!-- OBJECT 3 — PORTAL -->
-        <a-entity id="panel" position="0 1 0" scale="1.8 1.8 1.8" visible="false">
-          <a-torus
-            radius="1.2"
-            radius-tubular="0.1"
+        <!-- ✨ OBJECT 3 — GLOWING PORTAL -->
+        <a-entity id="panel" position="0 2.5 0" scale="3.5 3.5 3.5" visible="false">
+          <a-ring
+            radius-inner="1.2"
+            radius-outer="2.2"
             color="#00FFFF"
+            material="emissive: #00FFFF; emissiveIntensity: 0.7; opacity: 0.9;"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
-          ></a-torus>
+          ></a-ring>
 
           <a-text
-            value="You opened the portal!"
+            value="You opened a portal!"
             align="center"
-            width="3"
-            position="0 -0.4 0.4"
+            width="5"
+            position="0 -0.6 0.8"
             color="#FFFFFF"
           ></a-text>
         </a-entity>
@@ -119,7 +134,7 @@
       <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- LOGIC -->
+    <!-- INTERACTION LOGIC -->
     <script>
       let state = 0;
       let markerSeen = false;
@@ -134,13 +149,9 @@
         markerSeen = true;
         console.log("MARKER FOUND");
 
-        if (state === 0) {
-          story.textContent = "Step 1 — The golden seed rises. Tap to evolve.";
-        } else if (state === 1) {
-          story.textContent = "Step 2 — A living sphere forms. Tap again.";
-        } else if (state === 2) {
-          story.textContent = "Step 3 — A portal opens. Tap to restart.";
-        }
+        if (state === 0) story.textContent = "Step 1 — The golden seed rises. Tap to evolve.";
+        if (state === 1) story.textContent = "Step 2 — A breathing sphere appears. Tap again.";
+        if (state === 2) story.textContent = "Step 3 — A portal emerges. Tap to restart.";
       });
 
       document.body.addEventListener("click", () => {
@@ -150,13 +161,15 @@
           obj1.setAttribute("visible", "false");
           obj2.setAttribute("visible", "true");
           state = 1;
-          story.textContent = "Step 2 — The world becomes a living bubble.";
-        } else if (state === 1) {
+          story.textContent = "Step 2 — The sphere awakens.";
+        } 
+        else if (state === 1) {
           obj2.setAttribute("visible", "false");
           panel.setAttribute("visible", "true");
           state = 2;
-          story.textContent = "Step 3 — A portal opens.";
-        } else if (state === 2) {
+          story.textContent = "Step 3 — The portal opens.";
+        } 
+        else if (state === 2) {
           panel.setAttribute("visible", "false");
           obj1.setAttribute("visible", "true");
           state = 0;

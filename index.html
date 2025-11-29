@@ -4,63 +4,37 @@
     <meta charset="utf-8" />
     <title>Blooming Worlds – AR NFT Project</title>
 
-    <!-- AFRAME -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-
-    <!-- AR.js NFT -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar-nft.js"></script>
 
     <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        font-family: system-ui, sans-serif;
-      }
-
+      body { margin: 0; overflow: hidden; font-family: system-ui; }
       #ui {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        max-width: 320px;
-        padding: 12px 16px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #ffffff;
-        border-radius: 12px;
-        z-index: 10;
+        position: fixed; top: 10px; left: 10px;
+        max-width: 320px; padding: 12px 16px;
+        background: rgba(0,0,0,0.55); color: white;
+        border-radius: 12px; z-index: 100;
       }
-
-      #ui h1 {
-        margin: 0 0 4px;
-        font-size: 18px;
-        font-weight: 600;
-      }
-
-      #ui p {
-        margin: 3px 0;
-        font-size: 13px;
-      }
-
-      #ui small {
-        font-size: 11px;
-        opacity: 0.9;
-      }
+      #ui h1 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
+      #ui p { margin: 3px 0; font-size: 13px; }
+      #ui small { font-size: 11px; opacity: 0.9; }
     </style>
   </head>
 
   <body>
     <div id="ui">
       <h1>Blooming Worlds</h1>
-      <p>The deep-sea light creature emerges from the painting.</p>
-      <p id="story">Step 1 — A glowing seed ignites. Tap to evolve.</p>
-      <small>Move around the marker to explore the creature.</small>
+      <p>A deep-sea bioluminescent creature grows from the painting.</p>
+      <p id="story">Step 1 — A glowing seed awakens. Tap to evolve.</p>
+      <small>Move around the marker to explore.</small>
     </div>
 
     <a-scene
       embedded
-      renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled:false"
+      renderer="logarithmicDepthBuffer:true;"
+      device-orientation-permission-ui="enabled:false"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled:false"
     >
 
       <a-nft
@@ -74,91 +48,113 @@
         id="marker"
       >
 
-        <!-- STEP 1 — HUGE SEED -->
+        <!-- STEP 1 — ENHANCED SEED -->
         <a-entity id="obj1" position="0 4.2 0" scale="6 6 6" visible="true">
-          <a-sphere
-            radius="1.5"
-            color="#66FFFF"
-            material="emissive: #33FFFF; emissiveIntensity: 1.1;"
-            animation="property: scale; dir: alternate; dur: 1500; loop: true; to: 1.8 1.8 1.8; from: 1 1 1"
-          ></a-sphere>
 
-          <a-ring
-            radius-inner="1.7"
-            radius-outer="2.6"
-            position="0 0 0.3"
-            color="#99FFEE"
-            material="emissive: #99FFEE; emissiveIntensity: 0.9; opacity: 0.7;"
-            animation="property: rotation; to: 0 0 360; loop: true; dur: 2200"
-          ></a-ring>
+          <a-sphere radius="1.4" color="#66FFFF"
+            material="emissive:#33FFFF; emissiveIntensity:1.2;"
+            animation="property:scale; dir:alternate; dur:1400; loop:true; to:1.5 1.5 1.5; from:1.1 1.1 1.1">
+          </a-sphere>
+
+          <a-ring radius-inner="1.7" radius-outer="2.6" position="0 0 0.25"
+            color="#99FFEE" material="emissive:#99FFEE; emissiveIntensity:0.9; opacity:0.7;"
+            animation="property:rotation; to:0 0 360; loop:true; dur:3000"></a-ring>
+
+          <a-ring radius-inner="2.1" radius-outer="2.9" position="0 0 0.35"
+            color="#AAFFFF" material="emissive:#AAFFFF; emissiveIntensity:0.9; opacity:0.5;"
+            animation="property:rotation; from:0 0 0; to:0 0 -360; loop:true; dur:4000"></a-ring>
+
         </a-entity>
 
-        <!-- STEP 2 — HUGE JELLYFISH -->
-        <a-entity id="obj2" position="0 4.3 0" scale="6 6 6" visible="false">
-          <!-- bell -->
-          <a-sphere
-            radius="2"
-            position="0 0.8 0"
-            color="#2244FF"
-            material="opacity: 0.8; emissive: #7744FF; emissiveIntensity: 1.1;"
-            animation="property: scale; dir: alternate; dur: 1600; loop: true; to: 1.3 1.15 1.3; from: 1 1 1"
-          ></a-sphere>
 
-          <!-- glowing core -->
-          <a-sphere
-            radius="0.9"
-            position="0 0.8 0"
-            color="#88FFFF"
-            material="emissive: #AAFFEE; emissiveIntensity: 1.3;"
-            animation="property: color; from: #88FFFF; to: #FF88FF; loop: true; dur: 1400"
-          ></a-sphere>
+        <!-- STEP 2 — ENHANCED JELLYFISH -->
+        <a-entity id="obj2" position="0 4.4 0" scale="6.5 6.5 6.5" visible="false">
 
-          <!-- tentacles -->
-          <a-cylinder
-            radius="0.1"
-            height="4"
-            position="0.6 -1.6 0"
-            color="#66FFFF"
-            material="opacity: 0.9; emissive: #55FFFF; emissiveIntensity: 1;"
-            animation="property: rotation; dir: alternate; dur: 1300; loop: true; to: 0 30 20; from: 0 -30 -20"
-          ></a-cylinder>
+          <!-- main bell -->
+          <a-sphere radius="2.3" position="0 0.9 0" color="#2244FF"
+            material="opacity:0.82; emissive:#7744FF; emissiveIntensity:1.2;"
+            animation="property:scale; dir:alternate; dur:1700; loop:true; to:1.28 1.15 1.28;">
+          </a-sphere>
 
-          <a-cylinder
-            radius="0.1"
-            height="4.5"
-            position="-0.55 -1.8 0.3"
-            color="#66CCFF"
-            material="opacity: 0.9; emissive: #55CCFF; emissiveIntensity: 1;"
-            animation="property: rotation; dir: alternate; dur: 1500; loop: true; to: 0 -25 15; from: 0 25 -15"
-          ></a-cylinder>
+          <!-- inner glowing heart -->
+          <a-sphere radius="1.0" position="0 0.9 0"
+            color="#88FFFF" material="emissive:#AAFFEE; emissiveIntensity:1.4;"
+            animation="property:color; from:#88FFFF; to:#FF88FF; loop:true; dur:1500"></a-sphere>
 
-          <a-cylinder
-            radius="0.1"
-            height="4.2"
-            position="0.1 -2.0 -0.3"
-            color="#AA88FF"
-            material="opacity: 0.9; emissive: #BB77FF; emissiveIntensity: 1;"
-            animation="property: rotation; dir: alternate; dur: 1700; loop: true; to: 20 20 -20; from: -20 -20 20"
-          ></a-cylinder>
+          <!-- tentacles (3 improved) -->
+          <a-entity>
+            <a-cylinder radius="0.12" height="4.8" position="0.7 -1.8 0"
+              color="#66FFFF"
+              material="opacity:0.9; emissive:#55FFFF; emissiveIntensity:1.1;"
+              animation="property:rotation; dir:alternate; dur:1300; loop:true;
+                to:0 35 22; from:0 -35 -22">
+            </a-cylinder>
+
+            <a-cylinder radius="0.12" height="5.2" position="-0.65 -2.0 0.4"
+              color="#66CCFF"
+              material="opacity:0.9; emissive:#55CCFF; emissiveIntensity:1.1;"
+              animation="property:rotation; dir:alternate; dur:1600; loop:true;
+                to:0 -28 18; from:0 28 -18">
+            </a-cylinder>
+
+            <a-cylinder radius="0.12" height="5.0" position="0.1 -2.2 -0.4"
+              color="#AA88FF"
+              material="opacity:0.9; emissive:#BB77FF; emissiveIntensity:1.1;"
+              animation="property:rotation; dir:alternate; dur:1900; loop:true;
+                to:22 22 -22; from:-22 -22 22">
+            </a-cylinder>
+          </a-entity>
+
         </a-entity>
 
-        <!-- STEP 3 — HUGE PORTAL -->
-        <a-entity id="panel" position="0 4.3 0" scale="6 6 6" visible="false">
-          <a-ring
-            radius-inner="2.4"
-            radius-outer="4.2"
+
+        <!-- STEP 3 — ENHANCED PORTAL / HALO GATE -->
+        <a-entity id="panel" position="0 4.4 0" scale="7 7 7" visible="false">
+
+          <!-- outer ring -->
+          <a-ring radius-inner="2.7" radius-outer="4.4"
             color="#00FFFF"
-            material="emissive: #00FFFF; emissiveIntensity: 1.2; opacity: 0.9;"
-            animation="property: rotation; to: 0 0 360; loop: true; dur: 3000"
-          ></a-ring>
+            material="emissive:#00FFFF; emissiveIntensity:1.3; opacity:0.95;"
+            animation="property:rotation; to:0 0 360; loop:true; dur:3000">
+          </a-ring>
 
-          <a-text
-            value="The jellyfish opens a portal."
-            align="center"
-            width="10"
-            position="0 -1.3 1"
-            color="#FFFFFF"
-          ></a-text>
+          <!-- mid ring -->
+          <a-ring radius-inner="1.9" radius-outer="3.1" position="0 0 0.25"
+            color="#FF88FF"
+            material="emissive:#FF66FF; emissiveIntensity:1.2; opacity:0.8;"
+            animation="property:rotation; to:0 0 -360; loop:true; dur:3800">
+          </a-ring>
+
+          <!-- inner glowing spiral core -->
+          <a-sphere radius="0.9" position="0 0 0.5"
+            color="#88FFFF"
+            material="emissive:#AAFFFF; emissiveIntensity:1.5; opacity:0.9;"
+            animation="property:scale; dir:alternate; dur:1200; loop:true;
+              to:1.3 1.3 1.3; from:0.9 0.9 0.9">
+          </a-sphere>
+
+          <!-- floating shards -->
+          <a-entity>
+            <a-sphere radius="0.25" position="2.2 0.3 0.2"
+              color="#FF66FF"
+              material="emissive:#FF44FF; emissiveIntensity:1.3;"
+              animation="property:position; loop:true; dur:4200;
+                to:-2.2 0.7 -0.2">
+            </a-sphere>
+
+            <a-sphere radius="0.22" position="-1.9 -0.2 0.4"
+              color="#88FFFF"
+              material="emissive:#66FFFF; emissiveIntensity:1.3;"
+              animation="property:position; loop:true; dur:3800;
+                to:1.9 0.6 -0.4">
+            </a-sphere>
+          </a-entity>
+
+          <a-text value="A deep-sea portal opens."
+            align="center" width="10"
+            position="0 -1.5 1"
+            color="#FFFFFF">
+          </a-text>
         </a-entity>
 
       </a-nft>
@@ -166,53 +162,45 @@
       <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- EVOLUTION LOGIC -->
     <script>
       let state = 0;
       let markerSeen = false;
-      let lastTransitionTime = 0;
-      const MIN_INTERVAL = 400; // ms between transitions, avoids double-taps
+      let lastClick = 0;
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
       const panel = document.querySelector("#panel");
-      const marker = document.querySelector("#marker");
       const story = document.querySelector("#story");
+      const marker = document.querySelector("#marker");
 
-      marker.addEventListener("markerFound", () => {
-        markerSeen = true;
-        console.log("MARKER FOUND");
-      });
+      marker.addEventListener("markerFound", () => { markerSeen = true; });
 
-      // Use ONLY 'click' to avoid touch+click double firing
-      document.body.addEventListener("click", evolve, false);
-
-      function evolve() {
+      document.body.addEventListener("click", () => {
         if (!markerSeen) return;
 
         const now = Date.now();
-        if (now - lastTransitionTime < MIN_INTERVAL) {
-          return; // ignore very fast double-trigger
-        }
-        lastTransitionTime = now;
+        if (now - lastClick < 400) return; 
+        lastClick = now;
 
         if (state === 0) {
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", true);
           state = 1;
-          story.textContent = "Step 2 — The jellyfish awakens.";
-        } else if (state === 1) {
+          story.textContent = "Step 2 — A glowing jellyfish emerges.";
+        }
+        else if (state === 1) {
           obj2.setAttribute("visible", false);
           panel.setAttribute("visible", true);
           state = 2;
-          story.textContent = "Step 3 — A glowing portal forms.";
-        } else if (state === 2) {
+          story.textContent = "Step 3 — A bioluminescent portal opens.";
+        }
+        else {
           panel.setAttribute("visible", false);
           obj1.setAttribute("visible", true);
           state = 0;
           story.textContent = "Step 1 — A glowing seed reappears.";
         }
-      }
+      });
     </script>
   </body>
 </html>

@@ -17,7 +17,6 @@
         font-family: system-ui, sans-serif;
       }
 
-      /* On-screen instructions / story text */
       #ui {
         position: fixed;
         top: 10px;
@@ -49,17 +48,12 @@
   </head>
 
   <body>
-    <!-- UI PANEL (Step 6 – Text + narrative) -->
+    <!-- UI PANEL -->
     <div id="ui">
       <h1>Blooming Worlds</h1>
-      <p>
-        Point your camera at the painting marker. Then tap the screen to evolve
-        the world.
-      </p>
+      <p>Point your camera at the painting marker. Then tap to evolve the world.</p>
       <p id="story">Step 1 — A golden seed appears from the painting.</p>
-      <small>
-        Tip: move around the marker to see the shapes from different angles.
-      </small>
+      <small>Tip: move around the marker to see shapes from different angles.</small>
     </div>
 
     <a-scene
@@ -68,7 +62,8 @@
       vr-mode-ui="enabled: false"
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
-      <!-- NFT MARKER – NOW USING YOUR OWN FILES UNDER /nft/marker -->
+
+      <!-- NFT MARKER -->
       <a-nft
         type="nft"
         url="flo"
@@ -79,32 +74,33 @@
         emitevents="true"
         id="marker"
       >
-        <!-- SCENARIO 1 — GOLDEN SEED (inspired by your painting shapes) -->
-        <a-entity id="obj1" position="0 0.5 0" visible="true">
+
+        <!-- OBJECT 1 — SEED -->
+        <a-entity id="obj1" position="0 1 0" scale="1.8 1.8 1.8" visible="true">
           <a-cone
-            height="0.8"
-            radius-bottom="0.6"
+            height="1.2"
+            radius-bottom="0.8"
             color="#FFD700"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
-            animation__float="property: position; dir: alternate; dur: 1500; loop: true; to: 0 0.7 0; from: 0 0.5 0"
+            animation__float="property: position; dir: alternate; dur: 1500; loop: true; to: 0 1.3 0; from: 0 1 0"
           ></a-cone>
         </a-entity>
 
-        <!-- SCENARIO 2 — LIVING SPHERE / CELL -->
-        <a-entity id="obj2" position="0 0.5 0" visible="false">
+        <!-- OBJECT 2 — LIVING SPHERE -->
+        <a-entity id="obj2" position="0 1 0" scale="1.8 1.8 1.8" visible="false">
           <a-sphere
-            radius="0.45"
+            radius="0.7"
             color="#3366FF"
             animation="property: color; from: #3366FF; to: #FF33AA; loop: true; dur: 2000"
-            animation__pulse="property: scale; dir: alternate; dur: 1500; loop: true; to: 1.4 1.4 1.4; from: 1 1 1"
+            animation__pulse="property: scale; dir: alternate; dur: 1500; loop: true; to: 2 2 2; from: 1.5 1.5 1.5"
           ></a-sphere>
         </a-entity>
 
-        <!-- SCENARIO 3 — PORTAL MIRRORING THE PAINTING -->
-        <a-entity id="panel" position="0 0.5 0" visible="false">
+        <!-- OBJECT 3 — PORTAL -->
+        <a-entity id="panel" position="0 1 0" scale="1.8 1.8 1.8" visible="false">
           <a-torus
-            radius="0.8"
-            radius-tubular="0.05"
+            radius="1.2"
+            radius-tubular="0.1"
             color="#00FFFF"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 3000"
           ></a-torus>
@@ -112,19 +108,19 @@
           <a-text
             value="You opened the portal!"
             align="center"
-            width="2"
-            position="0 -0.2 0.2"
+            width="3"
+            position="0 -0.4 0.4"
             color="#FFFFFF"
           ></a-text>
         </a-entity>
+
       </a-nft>
 
       <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- LOGIC / INTERACTION -->
+    <!-- LOGIC -->
     <script>
-      // 0 = seed, 1 = sphere, 2 = portal
       let state = 0;
       let markerSeen = false;
 
@@ -135,49 +131,36 @@
       const story = document.querySelector("#story");
 
       marker.addEventListener("markerFound", () => {
-        console.log("📌 MARKER FOUND");
         markerSeen = true;
+        console.log("MARKER FOUND");
 
-        // Update story depending on current state
         if (state === 0) {
-          story.textContent =
-            "Step 1 — A golden seed rises from the painting. Tap to let it evolve.";
+          story.textContent = "Step 1 — The golden seed rises. Tap to evolve.";
         } else if (state === 1) {
-          story.textContent =
-            "Step 2 — The seed becomes a breathing sphere. Tap again to open the portal.";
+          story.textContent = "Step 2 — A living sphere forms. Tap again.";
         } else if (state === 2) {
-          story.textContent =
-            "Step 3 — The portal echoes the colours of the artwork. Tap to restart the cycle.";
+          story.textContent = "Step 3 — A portal opens. Tap to restart.";
         }
       });
 
-      marker.addEventListener("markerLost", () => {
-        console.log("❌ MARKER LOST");
-      });
-
-      // Interaction: only works AFTER the marker has been scanned at least once
       document.body.addEventListener("click", () => {
-        if (!markerSeen) return; // satisfies 'second object cannot appear until first scanned'
+        if (!markerSeen) return;
 
         if (state === 0) {
           obj1.setAttribute("visible", "false");
           obj2.setAttribute("visible", "true");
           state = 1;
-          story.textContent =
-            "Step 2 — The world becomes a living bubble. Tap again to tear it open.";
+          story.textContent = "Step 2 — The world becomes a living bubble.";
         } else if (state === 1) {
           obj2.setAttribute("visible", "false");
           panel.setAttribute("visible", "true");
           state = 2;
-          story.textContent =
-            "Step 3 — A portal opens into the abstract garden. Tap to start over.";
+          story.textContent = "Step 3 — A portal opens.";
         } else if (state === 2) {
-          // restart cycle
           panel.setAttribute("visible", "false");
           obj1.setAttribute("visible", "true");
           state = 0;
-          story.textContent =
-            "Step 1 — The portal collapses back into a seed. Tap to grow it again.";
+          story.textContent = "Step 1 — The seed is reborn.";
         }
       });
     </script>

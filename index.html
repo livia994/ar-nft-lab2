@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>AR NFT Project</title>
+    <title>Blooming Worlds – AR NFT Project</title>
 
     <!-- AFRAME -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
@@ -14,38 +14,72 @@
       body {
         margin: 0;
         overflow: hidden;
+        font-family: system-ui, sans-serif;
+      }
+
+      /* On-screen instructions / story text */
+      #ui {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        max-width: 280px;
+        padding: 10px 14px;
+        background: rgba(0, 0, 0, 0.55);
+        color: #ffffff;
+        border-radius: 10px;
+        z-index: 10;
+      }
+
+      #ui h1 {
+        margin: 0 0 4px;
+        font-size: 16px;
+      }
+
+      #ui p {
+        margin: 2px 0;
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+      #ui small {
+        font-size: 11px;
+        opacity: 0.9;
       }
     </style>
   </head>
 
   <body>
+    <!-- UI PANEL (Step 6 – Text + narrative) -->
+    <div id="ui">
+      <h1>Blooming Worlds</h1>
+      <p>
+        Point your camera at the painting marker. Then tap the screen to evolve
+        the world.
+      </p>
+      <p id="story">Step 1 — A golden seed appears from the painting.</p>
+      <small>
+        Tip: move around the marker to see the shapes from different angles.
+      </small>
+    </div>
+
     <a-scene
       embedded
       renderer="logarithmicDepthBuffer: true;"
       vr-mode-ui="enabled: false"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
-
-      <!-- NFT MARKER (LOADED FROM GITHUB RAW) -->
-        <a-nft
-          type="nft"
-          url="https://livia994.github.io/ar-nft-lab2/nft/marker"
-          smooth="true"
-          smoothCount="10"
-          smoothTolerance="0.01"
-          smoothThreshold="5"
-          emitevents="true"
-          id="marker"
-        >
-
-        <!-- Debug Axis -->
-        <a-entity id="axis">
-          <a-entity line="start: 0 0 0; end: 1 0 0; color: red"></a-entity>
-          <a-entity line="start: 0 0 0; end: 0 1 0; color: green"></a-entity>
-          <a-entity line="start: 0 0 0; end: 0 0 1; color: blue"></a-entity>
-        </a-entity>
-
-        <!-- SCENARIO 1 — PYRAMID -->
+      <!-- NFT MARKER – NOW USING YOUR OWN FILES UNDER /nft/marker -->
+      <a-nft
+        type="nft"
+        url="nft/marker"
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+        emitevents="true"
+        id="marker"
+      >
+        <!-- SCENARIO 1 — GOLDEN SEED (inspired by your painting shapes) -->
         <a-entity id="obj1" position="0 0.5 0" visible="true">
           <a-cone
             height="0.8"
@@ -56,16 +90,17 @@
           ></a-cone>
         </a-entity>
 
-        <!-- SCENARIO 2 — SPHERE -->
+        <!-- SCENARIO 2 — LIVING SPHERE / CELL -->
         <a-entity id="obj2" position="0 0.5 0" visible="false">
           <a-sphere
             radius="0.45"
+            color="#3366FF"
             animation="property: color; from: #3366FF; to: #FF33AA; loop: true; dur: 2000"
             animation__pulse="property: scale; dir: alternate; dur: 1500; loop: true; to: 1.4 1.4 1.4; from: 1 1 1"
           ></a-sphere>
         </a-entity>
 
-        <!-- SCENARIO 3 — PORTAL -->
+        <!-- SCENARIO 3 — PORTAL MIRRORING THE PAINTING -->
         <a-entity id="panel" position="0 0.5 0" visible="false">
           <a-torus
             radius="0.8"
@@ -82,37 +117,69 @@
             color="#FFFFFF"
           ></a-text>
         </a-entity>
-
       </a-nft>
 
       <a-entity camera></a-entity>
-
     </a-scene>
 
-    <!-- LOGIC -->
+    <!-- LOGIC / INTERACTION -->
     <script>
+      // 0 = seed, 1 = sphere, 2 = portal
       let state = 0;
+      let markerSeen = false;
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
       const panel = document.querySelector("#panel");
       const marker = document.querySelector("#marker");
+      const story = document.querySelector("#story");
 
-      marker.addEventListener("markerFound", () => console.log("📌 MARKER FOUND"));
-      marker.addEventListener("markerLost", () => console.log("❌ MARKER LOST"));
+      marker.addEventListener("markerFound", () => {
+        console.log("📌 MARKER FOUND");
+        markerSeen = true;
 
+        // Update story depending on current state
+        if (state === 0) {
+          story.textContent =
+            "Step 1 — A golden seed rises from the painting. Tap to let it evolve.";
+        } else if (state === 1) {
+          story.textContent =
+            "Step 2 — The seed becomes a breathing sphere. Tap again to open the portal.";
+        } else if (state === 2) {
+          story.textContent =
+            "Step 3 — The portal echoes the colours of the artwork. Tap to restart the cycle.";
+        }
+      });
+
+      marker.addEventListener("markerLost", () => {
+        console.log("❌ MARKER LOST");
+      });
+
+      // Interaction: only works AFTER the marker has been scanned at least once
       document.body.addEventListener("click", () => {
+        if (!markerSeen) return; // satisfies 'second object cannot appear until first scanned'
+
         if (state === 0) {
           obj1.setAttribute("visible", "false");
           obj2.setAttribute("visible", "true");
           state = 1;
+          story.textContent =
+            "Step 2 — The world becomes a living bubble. Tap again to tear it open.";
         } else if (state === 1) {
           obj2.setAttribute("visible", "false");
           panel.setAttribute("visible", "true");
           state = 2;
+          story.textContent =
+            "Step 3 — A portal opens into the abstract garden. Tap to start over.";
+        } else if (state === 2) {
+          // restart cycle
+          panel.setAttribute("visible", "false");
+          obj1.setAttribute("visible", "true");
+          state = 0;
+          story.textContent =
+            "Step 1 — The portal collapses back into a seed. Tap to grow it again.";
         }
       });
     </script>
-
   </body>
 </html>

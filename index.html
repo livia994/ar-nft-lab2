@@ -170,8 +170,6 @@
     <script>
       let state = 0;
       let markerSeen = false;
-      let lastTransitionTime = 0;
-      const MIN_INTERVAL = 400; // ms between transitions, avoids double-taps
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
@@ -184,17 +182,10 @@
         console.log("MARKER FOUND");
       });
 
-      // Use ONLY 'click' to avoid touch+click double firing
       document.body.addEventListener("click", evolve, false);
 
       function evolve() {
         if (!markerSeen) return;
-
-        const now = Date.now();
-        if (now - lastTransitionTime < MIN_INTERVAL) {
-          return; // ignore very fast double-trigger
-        }
-        lastTransitionTime = now;
 
         if (state === 0) {
           obj1.setAttribute("visible", false);

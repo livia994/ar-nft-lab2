@@ -1,102 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>AR NFT Project</title>
+<head>
+  <meta charset="utf-8">
+  <title>AR NFT Test</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar-nft.js"></script>
+  <style> body { margin: 0; overflow: hidden; } </style>
+</head>
+<body>
+  <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+    <a-nft type="nft" url="./pat" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5" emitevents="true">
 
-    <!-- A-Frame -->
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+      <a-box id="obj1" position="0 0.5 0" depth="0.5" height="0.5" width="0.5" color="#FF0000"></a-box>
 
-    <!-- AR.js NFT -->
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
-
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-
-  <body>
-    <a-scene
-      vr-mode-ui="enabled: false"
-      renderer="logarithmicDepthBuffer: true;"
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-    >
-      <!-- NFT Marker (your pat files) -->
-      <a-nft
-        type="nft"
-        url="./pat"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-        emitevents="true"
-        id="marker"
-      >
-        <!-- Object 1: cube (first scenario) -->
-        <a-box
-          id="obj1"
-          position="0 0.5 0"
-          depth="0.5"
-          height="0.5"
-          width="0.5"
-          color="#FF3333"
-        ></a-box>
-
-        <!-- Object 2: sphere (second scenario) -->
-        <a-sphere
-          id="obj2"
-          position="0 0.5 0"
-          radius="0.35"
-          color="#3366FF"
-          visible="false"
-        ></a-sphere>
-
-        <!-- Text Panel (third scenario, for grade 9) -->
-        <a-entity id="textpanel" visible="false" position="0 0.5 0">
-          <a-plane
-            width="1.8"
-            height="0.7"
-            color="#222"
-            opacity="0.9"
-          ></a-plane>
-
-          <a-text
-            value="You unlocked the final clue!"
-            align="center"
-            width="1.6"
-            position="0 0 0.01"
-            color="#FFFFFF"
-          ></a-text>
-        </a-entity>
-      </a-nft>
-
-      <a-entity camera></a-entity>
-    </a-scene>
-
-    <!-- Interaction Logic -->
-    <script>
-      let state = 0; // 0 = cube, 1 = sphere, 2 = text panel
-      const obj1 = document.querySelector("#obj1");
-      const obj2 = document.querySelector("#obj2");
-      const textPanel = document.querySelector("#textpanel");
-
-      document.body.addEventListener("click", () => {
-        if (state === 0) {
-          // switch to object 2
-          obj1.setAttribute("visible", "false");
-          obj2.setAttribute("visible", "true");
-          state = 1;
-        } else if (state === 1) {
-          // switch to text panel
-          obj2.setAttribute("visible", "false");
-          textPanel.setAttribute("visible", "true");
-          state = 2;
-        }
-      });
-    </script>
-  </body>
+    </a-nft>
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
 </html>

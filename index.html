@@ -93,7 +93,7 @@
           ></a-ring>
         </a-entity>
 
-        <!-- STEP 2 — HUGE JELLYFISH -->
+        <!-- STEP 2 — HUGE JELLYFISH (primitive) -->
         <a-entity id="obj2" position="0 4.3 0" scale="6 6 6" visible="false">
           <!-- bell -->
           <a-sphere
@@ -142,24 +142,17 @@
           ></a-cylinder>
         </a-entity>
 
-        <!-- STEP 3 — HUGE PORTAL -->
-        <a-entity id="panel" position="0 4.3 0" scale="6 6 6" visible="false">
-          <a-ring
-            radius-inner="2.4"
-            radius-outer="4.2"
-            color="#00FFFF"
-            material="emissive: #00FFFF; emissiveIntensity: 1.2; opacity: 0.9;"
-            animation="property: rotation; to: 0 0 360; loop: true; dur: 3000"
-          ></a-ring>
-
-          <a-text
-            value="The jellyfish opens a portal."
-            align="center"
-            width="10"
-            position="0 -1.3 1"
-            color="#FFFFFF"
-          ></a-text>
-        </a-entity>
+        <!-- STEP 3 — FULL 3D JELLYFISH (Sketchfab model) -->
+        <!-- Uses scene.gltf / scene.bin / textures from your folder -->
+        <a-entity
+          id="obj3"
+          gltf-model="url(scene.gltf)"
+          position="0 4.3 0"
+          scale="3 3 3"
+          rotation="0 180 0"
+          visible="false"
+          animation="property: position; dir: alternate; dur: 2500; loop: true; to: 0 4.7 0; from: 0 4.0 0"
+        ></a-entity>
 
       </a-nft>
 
@@ -175,7 +168,7 @@
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
-      const panel = document.querySelector("#panel");
+      const obj3 = document.querySelector("#obj3"); // NEW
       const marker = document.querySelector("#marker");
       const story = document.querySelector("#story");
 
@@ -197,18 +190,24 @@
         lastTransitionTime = now;
 
         if (state === 0) {
+          // seed -> primitive jellyfish
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", true);
+          obj3.setAttribute("visible", false);
           state = 1;
-          story.textContent = "Step 2 — The jellyfish awakens.";
+          story.textContent = "Step 2 — The jellyfish begins to take shape.";
         } else if (state === 1) {
+          // primitive jellyfish -> full 3D jellyfish
+          obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", false);
-          panel.setAttribute("visible", true);
+          obj3.setAttribute("visible", true);
           state = 2;
-          story.textContent = "Step 3 — A glowing portal forms.";
+          story.textContent = "Step 3 — The jellyfish is fully grown.";
         } else if (state === 2) {
-          panel.setAttribute("visible", false);
+          // loop back to seed
+          obj3.setAttribute("visible", false);
           obj1.setAttribute("visible", true);
+          obj2.setAttribute("visible", false);
           state = 0;
           story.textContent = "Step 1 — A glowing seed reappears.";
         }

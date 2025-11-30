@@ -63,6 +63,12 @@
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
 
+      <!-- 🌊 Underwater Ambient Light -->
+      <a-entity light="type: ambient; color: #88CCFF; intensity: 0.35"></a-entity>
+
+      <!-- 🌊 Glowing Point Light -->
+      <a-entity light="type: point; color: #88FFFF; intensity: 1.6; distance: 18" position="0 4 3"></a-entity>
+
       <a-nft
         type="nft"
         url="flo"
@@ -94,7 +100,15 @@
         </a-entity>
 
         <!-- STEP 2 — HUGE JELLYFISH (primitive) -->
-        <a-entity id="obj2" position="0 3.2 0" scale="6 6 6" visible="false">
+        <a-entity
+          id="obj2"
+          position="0 3.2 0"
+          scale="6 6 6"
+          rotation="-10 0 0"
+          visible="false"
+          material="opacity: 0"
+          animation__fade="property: material.opacity; from: 0; to: 1; dur: 600"
+        >
           <!-- bell -->
           <a-sphere
             radius="2"
@@ -143,14 +157,15 @@
         </a-entity>
 
         <!-- STEP 3 — FULL 3D JELLYFISH (Sketchfab model) -->
-        <!-- Uses scene.gltf / scene.bin / textures from your folder -->
         <a-entity
           id="obj3"
           gltf-model="url(scene.gltf)"
           position="0 2.0 0"
           scale="20 20 20"
-          rotation="0 180 0"
+          rotation="-15 180 0"
           visible="false"
+          material="opacity: 0"
+          animation__fade="property: material.opacity; from: 0; to: 1; dur: 600"
           animation="property: position; dir: alternate; dur: 2500; loop: true; to: 0 4.7 0; from: 0 4.0 0"
         ></a-entity>
 
@@ -164,52 +179,45 @@
       let state = 0;
       let markerSeen = false;
       let lastTransitionTime = 0;
-      const MIN_INTERVAL = 400; // ms between transitions, avoids double-taps
+      const MIN_INTERVAL = 400;
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
-      const obj3 = document.querySelector("#obj3"); // NEW
+      const obj3 = document.querySelector("#obj3");
       const marker = document.querySelector("#marker");
       const story = document.querySelector("#story");
 
       marker.addEventListener("markerFound", () => {
         markerSeen = true;
-        console.log("MARKER FOUND");
       });
 
-      // Use ONLY 'click' to avoid touch+click double firing
       document.body.addEventListener("click", evolve, false);
 
       function evolve() {
         if (!markerSeen) return;
 
         const now = Date.now();
-        if (now - lastTransitionTime < MIN_INTERVAL) {
-          return; // ignore very fast double-trigger
-        }
+        if (now - lastTransitionTime < MIN_INTERVAL) return;
         lastTransitionTime = now;
 
         if (state === 0) {
-          // seed -> primitive jellyfish
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", true);
           obj3.setAttribute("visible", false);
-          state = 1;
           story.textContent = "Step 2 — The jellyfish begins to take shape.";
+          state = 1;
         } else if (state === 1) {
-          // primitive jellyfish -> full 3D jellyfish
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", false);
           obj3.setAttribute("visible", true);
-          state = 2;
           story.textContent = "Step 3 — The jellyfish is fully grown.";
+          state = 2;
         } else if (state === 2) {
-          // loop back to seed
           obj3.setAttribute("visible", false);
           obj1.setAttribute("visible", true);
           obj2.setAttribute("visible", false);
-          state = 0;
           story.textContent = "Step 1 — A glowing seed reappears.";
+          state = 0;
         }
       }
     </script>

@@ -95,7 +95,6 @@
 
         <!-- STEP 2 — HUGE JELLYFISH (primitive) -->
         <a-entity id="obj2" position="0 3.2 0" scale="6 6 6" visible="false">
-
           <!-- bell -->
           <a-sphere
             radius="2"
@@ -144,6 +143,7 @@
         </a-entity>
 
         <!-- STEP 3 — FULL 3D JELLYFISH (Sketchfab model) -->
+        <!-- Uses scene.gltf / scene.bin / textures from your folder -->
         <a-entity
           id="obj3"
           gltf-model="url(scene.gltf)"
@@ -164,11 +164,11 @@
       let state = 0;
       let markerSeen = false;
       let lastTransitionTime = 0;
-      const MIN_INTERVAL = 400; // ms between transitions
+      const MIN_INTERVAL = 400; // ms between transitions, avoids double-taps
 
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
-      const obj3 = document.querySelector("#obj3");
+      const obj3 = document.querySelector("#obj3"); // NEW
       const marker = document.querySelector("#marker");
       const story = document.querySelector("#story");
 
@@ -177,38 +177,41 @@
         console.log("MARKER FOUND");
       });
 
+      // Use ONLY 'click' to avoid touch+click double firing
       document.body.addEventListener("click", evolve, false);
 
       function evolve() {
         if (!markerSeen) return;
 
         const now = Date.now();
-        if (now - lastTransitionTime < MIN_INTERVAL) return;
+        if (now - lastTransitionTime < MIN_INTERVAL) {
+          return; // ignore very fast double-trigger
+        }
         lastTransitionTime = now;
 
         if (state === 0) {
+          // seed -> primitive jellyfish
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", true);
           obj3.setAttribute("visible", false);
-          story.textContent = "Step 2 — The jellyfish begins to take shape.";
           state = 1;
-
+          story.textContent = "Step 2 — The jellyfish begins to take shape.";
         } else if (state === 1) {
+          // primitive jellyfish -> full 3D jellyfish
           obj1.setAttribute("visible", false);
           obj2.setAttribute("visible", false);
           obj3.setAttribute("visible", true);
-          story.textContent = "Step 3 — The jellyfish is fully grown.";
           state = 2;
-
+          story.textContent = "Step 3 — The jellyfish is fully grown.";
         } else if (state === 2) {
+          // loop back to seed
           obj3.setAttribute("visible", false);
           obj1.setAttribute("visible", true);
           obj2.setAttribute("visible", false);
-          story.textContent = "Step 1 — A glowing seed reappears.";
           state = 0;
+          story.textContent = "Step 1 — A glowing seed reappears.";
         }
       }
     </script>
-
   </body>
 </html>

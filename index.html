@@ -155,6 +155,15 @@
             animation="property: rotation; dir: alternate; dur: 1700; loop: true; to: 20 20 -20; from: -20 -20 20"
           ></a-cylinder>
         </a-entity>
+        <!-- 🌊 Underwater Transparent Layer -->
+        <a-plane
+          position="0 3.5 -1"
+          rotation="-90 0 0"
+          width="12"
+          height="12"
+          color="#55CCFF"
+          material="opacity: 0.18; transparent: true; depthWrite: false;"
+        ></a-plane>
 
         <!-- STEP 3 — FULL 3D JELLYFISH (Sketchfab model) -->
         <a-entity

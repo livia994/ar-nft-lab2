@@ -52,7 +52,7 @@
       <h1>Blooming Worlds</h1>
       <p>The deep-sea light creature emerges from the painting.</p>
       <p id="story">Step 1 — A glowing seed ignites. Tap to evolve.</p>
-      <small>Move around the marker to explore the creature.</small>
+      <small>Move around the marker to explore the creature. Scan the second painting later to unlock a hidden fish.</small>
     </div>
 
     <a-scene
@@ -74,6 +74,7 @@
         emitevents="true"
         id="marker"
       >
+
         <!-- STEP 1 — HUGE SEED -->
         <a-entity id="obj1" position="0 4.2 0" scale="6 6 6" visible="true">
           <a-sphere
@@ -154,7 +155,7 @@
         ></a-entity>
       </a-nft>
 
-      <!-- MARKER 2: "im" – bonus 3D orb, locked until flo has been scanned -->
+      <!-- MARKER 2: "im" – bonus fish, only active after Flo has been scanned -->
       <a-nft
         type="nft"
         url="im"
@@ -165,23 +166,16 @@
         emitevents="true"
         id="marker2"
       >
-        <!-- simple glowing orb -->
-        <a-entity id="imObj" position="0 3.0 0" visible="false">
-          <a-sphere
-            radius="1.2"
-            color="#88CCFF"
-            material="opacity: 0.85; emissive: #44CCFF; emissiveIntensity: 1.4;"
-            animation="property: scale; dir: alternate; dur: 2000; loop: true; to: 1.3 1.3 1.3; from: 1 1 1"
-          ></a-sphere>
-          <a-ring
-            radius-inner="1.3"
-            radius-outer="1.8"
-            position="0 -0.2 0"
-            color="#FFFFFF"
-            material="opacity: 0.7; emissive: #88FFFF; emissiveIntensity: 1;"
-            animation="property: rotation; dur: 4000; loop: true; to: 0 360 0"
-          ></a-ring>
-        </a-entity>
+        <!-- 3D fish model -->
+        <a-entity
+          id="fish"
+          gltf-model="url(fish.gltf)"
+          position="0 3 0"
+          scale="6 6 6"
+          rotation="0 90 0"
+          visible="false"
+          animation="property: rotation; to: 0 450 0; loop: true; dur: 8000"
+        ></a-entity>
       </a-nft>
 
       <a-entity camera></a-entity>
@@ -190,7 +184,7 @@
     <!-- EVOLUTION + UNLOCK LOGIC -->
     <script>
       let state = 0;
-      let markerSeen = false;   // for flo marker (main story)
+      let markerSeen = false;   // for flo marker
       let floSeen = false;      // has flo ever been scanned?
       let lastTransitionTime = 0;
       const MIN_INTERVAL = 400; // ms between transitions, avoids double-taps
@@ -199,36 +193,42 @@
       const obj2 = document.querySelector("#obj2");
       const obj3 = document.querySelector("#obj3");
       const marker = document.querySelector("#marker");
+
       const marker2 = document.querySelector("#marker2");
-      const imObj = document.querySelector("#imObj");
+      const fish = document.querySelector("#fish");
+
       const story = document.querySelector("#story");
 
       // MARKER 1 (flo) found
       marker.addEventListener("markerFound", () => {
         markerSeen = true;
-        floSeen = true;  // unlocks the second marker
+        floSeen = true; // unlock second marker
         console.log("FLO MARKER FOUND");
+        if (state === 0) {
+          story.textContent = "Step 1 — A glowing seed ignites. Tap to evolve.";
+        }
       });
 
       // MARKER 2 (im) found
       marker2.addEventListener("markerFound", () => {
         console.log("IM MARKER FOUND");
         if (!floSeen) {
-          // Flo has never been scanned yet → ignore this marker
+          // Flo has never been scanned yet → do not reveal the fish
+          fish.setAttribute("visible", false);
           story.textContent =
-            "First, awaken the jellyfish on the Flo painting. Then this city will reveal its orb.";
-          imObj.setAttribute("visible", false);
+            "First, awaken the jellyfish on the Flo painting. Then this jellyfish photo will release its guardian fish.";
           return;
         }
-        // Flo was scanned at least once → show orb
-        imObj.setAttribute("visible", true);
+
+        // Flo was scanned at least once → show the fish
+        fish.setAttribute("visible", true);
         story.textContent =
-          "Bonus scene — a glowing orb hovers above the cityscape.";
+          "Bonus scene — A pale river fish slips out of the photograph and swims in AR.";
       });
 
-      // Hide orb when second marker is lost
+      // Hide fish when second marker is lost
       marker2.addEventListener("markerLost", () => {
-        imObj.setAttribute("visible", false);
+        fish.setAttribute("visible", false);
       });
 
       // Tap evolution for FLO marker only

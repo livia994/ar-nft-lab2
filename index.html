@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Blooming Worlds – AR NFT Project</title>
 
     <!-- AFRAME -->
@@ -11,43 +11,31 @@
     <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar-nft.js"></script>
 
     <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        font-family: system-ui, sans-serif;
-      }
-
+      body { margin:0; overflow:hidden; font-family:system-ui; }
       #ui {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        max-width: 320px;
-        padding: 12px 16px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #ffffff;
-        border-radius: 12px;
-        z-index: 10;
+        position:fixed; top:10px; left:10px; width:auto;
+        padding:12px 16px; background:rgba(0,0,0,0.65); color:#fff;
+        border-radius:12px; z-index:10; max-width:340px;
       }
-
-      #ui h1 { margin: 0 0 4px; font-size: 18px; font-weight: 600; }
-      #ui p { margin: 3px 0; font-size: 13px; }
-      #ui small { font-size: 11px; opacity: 0.9; }
+      #ui h1 {margin:0 0 4px; font-size:18px; font-weight:600;}
+      #ui p {margin:3px 0; font-size:13px;}
+      #ui small {opacity:.9; font-size:11px;}
     </style>
   </head>
 
   <body>
 
-    <!-- UI TEXT -->
+    <!-- On-screen Info UI -->
     <div id="ui">
       <h1>Blooming Worlds</h1>
-      <p><b>Main Marker:</b> FLO — evolving jellyfish</p>
-      <p><b>Second Marker:</b> OCEAN — <span id="lockTxt">LOCKED</span></p>
-      <p id="story">Step 1 — A glowing seed appears. Tap to evolve.</p>
-      <small>Scan <b>Flo first</b> → Evolve → Ocean unlocks.</small>
+      <p><b>Main Marker:</b> FLO – the evolving jellyfish.</p>
+      <p><b>Second Marker:</b> Ocean – <span id="lockTxt">LOCKED</span></p>
+      <p id="story">Step 1 — A glowing seed ignites. Tap to evolve.</p>
+      <small>Scan FLO first. Ocean unlocks later.</small>
     </div>
 
 
-    <!-- MAIN SCENE -->
+    <!-- ============ MAIN SCENE ============ -->
     <a-scene
       embedded
       renderer="logarithmicDepthBuffer: true;"
@@ -56,147 +44,165 @@
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled:false;"
     >
 
-      <!-- ================= FLO MARKER ================= -->
-      <a-nft
-        id="markerFlo"
-        type="nft"
-        url="flo"
-        emitevents="true"
-        smooth="true"
-        smoothCount="10"
-        smoothTolerance="0.01"
-        smoothThreshold="5"
-      >
+    <!-- ================= FLO MARKER ================= -->
+    <a-nft
+      id="markerFlo"
+      type="nft"
+      url="flo"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+      emitevents="true"
+    >
 
-        <!-- STEP 1 -->
-        <a-entity id="obj1" position="0 4.2 0" scale="6 6 6" visible="true">
-          <a-sphere
-            radius="1.5"
-            color="#66FFFF"
-            material="emissive:#33FFFF; emissiveIntensity:1.1;"
-            animation="property:scale; dir:alternate; dur:1500; loop:true;
-                       to:1.8 1.8 1.8; from:1 1 1">
-          </a-sphere>
+      <!-- STEP 1 -->
+      <a-entity id="obj1" position="0 4.2 0" scale="6 6 6" visible="true">
+        <a-sphere radius="1.5" color="#66FFFF"
+          material="emissive:#33FFFF; emissiveIntensity:1.1;"
+          animation="property:scale; dir:alternate; dur:1500; loop:true;
+                     to:1.8 1.8 1.8; from:1 1 1"></a-sphere>
 
-          <a-ring
-            radius-inner="1.7"
-            radius-outer="2.6"
-            position="0 0 0.3"
-            color="#99FFEE"
-            material="emissive:#99FFEE; emissiveIntensity:0.9; opacity:0.7;"
-            animation="property:rotation; to:0 0 360; loop:true; dur:2200">
-          </a-ring>
-        </a-entity>
+        <a-ring radius-inner="1.7" radius-outer="2.6" position="0 0 .3" color="#99FFEE"
+          material="emissive:#99FFEE; emissiveIntensity:.9; opacity:.7;"
+          animation="property:rotation; to:0 0 360; loop:true; dur:2200"></a-ring>
+      </a-entity>
 
-        <!-- STEP 2 -->
-        <a-entity id="obj2" position="0 3.2 0" scale="6 6 6" visible="false">
-          <a-sphere radius="2" position="0 .8 0" color="#2244FF"
-            material="opacity:.8; emissive:#7744FF; emissiveIntensity:1.1;"
-            animation="property:scale; dir:alternate; dur:1600; loop:true;
-                       to:1.3 1.15 1.3; from:1 1 1">
-          </a-sphere>
+      <!-- STEP 2 -->
+      <a-entity id="obj2" position="0 3.2 0" scale="6 6 6" visible="false">
+        <a-sphere radius="2" position="0 .8 0" color="#2244FF"
+          material="opacity:.8; emissive:#7744FF; emissiveIntensity:1.1;"
+          animation="property:scale; dir:alternate; dur:1600; loop:true;
+                     to:1.3 1.15 1.3; from:1 1 1"></a-sphere>
 
-          <a-sphere radius=".9" position="0 .8 0" color="#88FFFF"
-            material="emissive:#AAFFEE; emissiveIntensity:1.3;"
-            animation="property:color; from:#88FFFF; to:#FF88FF; loop:true; dur:1400">
-          </a-sphere>
+        <a-sphere radius=".9" position="0 .8 0" color="#88FFFF"
+          material="emissive:#AAFFEE; emissiveIntensity:1.3;"
+          animation="property:color; from:#88FFFF; to:#FF88FF; loop:true; dur:1400"></a-sphere>
 
-          <a-cylinder radius="0.1" height="4" position="0.6 -1.6 0" color="#66FFFF"
-            material="opacity:.9; emissive:#55FFFF;"
-            animation="property:rotation; dir:alternate; dur:1300; loop:true;
-                       to:0 30 20; from:0 -30 -20"></a-cylinder>
+        <a-cylinder radius="0.1" height="4" position="0.6 -1.6 0" color="#66FFFF"
+          material="opacity:.9; emissive:#55FFFF;"
+          animation="property:rotation; dir:alternate; dur:1300; loop:true;
+                     to:0 30 20; from:0 -30 -20"></a-cylinder>
 
-          <a-cylinder radius="0.1" height="4.5" position="-0.55 -1.8 .3" color="#66CCFF"
-            material="opacity:.9; emissive:#55CCFF;"
-            animation="property:rotation; dir:alternate; dur:1500; loop:true;
-                       to:0 -25 15; from:0 25 -15"></a-cylinder>
+        <a-cylinder radius="0.1" height="4.5" position="-0.55 -1.8 .3" color="#66CCFF"
+          material="opacity:.9; emissive:#55CCFF;"
+          animation="property:rotation; dir:alternate; dur:1500; loop:true;
+                     to:0 -25 15; from:0 25 -15"></a-cylinder>
 
-          <a-cylinder radius="0.1" height="4.2" position="0.1 -2.0 -.3" color="#AA88FF"
-            material="opacity:.9; emissive:#BB77FF;"
-            animation="property:rotation; dir:alternate; dur:1700; loop:true;
-                       to:20 20 -20; from:-20 -20 20"></a-cylinder>
-        </a-entity>
+        <a-cylinder radius="0.1" height="4.2" position="0.1 -2.0 -.3" color="#AA88FF"
+          material="opacity:.9; emissive:#BB77FF;"
+          animation="property:rotation; dir:alternate; dur:1700; loop:true;
+                     to:20 20 -20; from:-20 -20 20"></a-cylinder>
+      </a-entity>
 
-        <!-- STEP 3 — Full 3D Jellyfish -->
-        <a-entity id="obj3"
-          gltf-model="url(scene.gltf)"
-          position="0 2 0"
-          scale="20 20 20"
-          rotation="0 180 0"
-          visible="false"
-          animation="property:position; dir:alternate; dur:2500; loop:true;
-                     to:0 4.7 0; from:0 4.0 0">
-        </a-entity>
+      <!-- STEP 3 – full model -->
+      <a-entity id="obj3"
+        gltf-model="url(scene.gltf)"
+        position="0 2 0"
+        scale="20 20 20"
+        rotation="0 180 0"
+        visible="false"
+        animation="property:position; dir:alternate; dur:2500; loop:true;
+                   to:0 4.7 0; from:0 4.0 0">
+      </a-entity>
 
-      </a-nft>
+    </a-nft>
 
 
 
-      <!-- ================= SECOND MARKER: OCEAN ================= -->
-      <a-nft
-        id="markerOcean"
-        type="nft"
-        url="ocean"
-        emitevents="true"
-        visible="false"  <!-- Locked until Flo evolves -->
-      >
-        <a-sphere color="yellow" position="0 2 0" radius="1"></a-sphere> <!-- Debug visibility helper -->
+    <!-- ================= SECOND MARKER - OCEAN (LOCKED) ================= -->
+    <a-nft
+      id="markerOcean"
+      type="nft"
+      url="ocean"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+      emitevents="true"
+      visible="false"   <!-- HIDDEN UNTIL FLO UNLOCKS -->
+    >
 
-        <a-entity id="fishObj"
-          gltf-model="url(fish.gltf)"
-          position="0 1.5 0"
-          scale="40 40 40"
-          rotation="0 90 0"
-          animation="property:position; dir:alternate; dur:2000; loop:true;
-                     to:0 2.6 .5; from:0 1.4 -.5">
-        </a-entity>
-      </a-nft>
+      <a-entity id="fishObj"
+        gltf-model="url(fish.gltf)"
+        position="0 1.5 0"
+        scale="20 20 20"
+        rotation="0 90 0"
+        visible="true"
+        animation__swim="property:position; dir:alternate; dur:2800; loop:true;
+                         to:0 2.6 .5; from:0 1.4 -.5">
+      </a-entity>
 
-      <a-entity camera></a-entity>
+    </a-nft>
+
+
+    <a-entity camera></a-entity>
     </a-scene>
 
 
 
-    <!-- ===================== SCRIPT ===================== -->
+    <!-- ======================= SCRIPT ======================= -->
     <script>
-    let state = 0, floSeen = false, oceanUnlocked = false, lastTime = 0;
+      let state = 0;
+      let floSeen = false;
+      let oceanUnlocked = false;
+      let lastTime = 0;
 
-    const obj1=document.querySelector("#obj1"), obj2=document.querySelector("#obj2"),
-          obj3=document.querySelector("#obj3"), story=document.querySelector("#story"),
-          lockTxt=document.querySelector("#lockTxt"),
-          markerFlo=document.querySelector("#markerFlo"), markerOcean=document.querySelector("#markerOcean");
+      const obj1 = document.querySelector("#obj1");
+      const obj2 = document.querySelector("#obj2");
+      const obj3 = document.querySelector("#obj3");
+      const story = document.querySelector("#story");
+      const lockTxt = document.querySelector("#lockTxt");
 
-    /* Debug log visibility in console */
-    markerFlo.addEventListener("markerFound",()=>console.log("🟢 FLO FOUND"));
-    markerFlo.addEventListener("markerLost",()=>console.log("🟡 FLO LOST"));
-    markerOcean.addEventListener("markerFound",()=>console.log("🔵 OCEAN FOUND"));
-    markerOcean.addEventListener("markerLost",()=>console.log("🔵 OCEAN LOST"));
+      const markerFlo = document.querySelector("#markerFlo");
+      const markerOcean = document.querySelector("#markerOcean");
 
-    markerFlo.addEventListener("markerFound",()=>{ floSeen=true; console.log("FLO READY ✓"); });
+      markerFlo.addEventListener("markerFound", ()=>{
+        floSeen = true;
+        console.log("FLO SCANNED");
+      });
 
-    document.body.addEventListener("click",()=>{
-      if(!floSeen) return;
-      const now=Date.now(); if(now-lastTime<400) return; lastTime=now;
+      // TAP → evolve Flo
+      document.body.addEventListener("click", ()=>{
+        if(!floSeen) return;
 
-      if(state===0){
-        obj1.setAttribute("visible",false); obj2.setAttribute("visible",true);
-        story.textContent="Step 2 — Jellyfish taking shape."; state=1;
-      } else if(state===1){
-        obj2.setAttribute("visible",false); obj3.setAttribute("visible",true);
-        story.textContent="Step 3 — Jellyfish grown — OCEAN UNLOCKED."; state=2; unlockOcean();
-      } else {
-        obj3.setAttribute("visible",false); obj1.setAttribute("visible",true);
-        story.textContent="Step 1 — Seed reborn."; state=0;
+        const now = Date.now();
+        if(now-lastTime < 400) return;
+        lastTime = now;
+
+        if(state===0){
+          obj1.setAttribute("visible",false);
+          obj2.setAttribute("visible",true);
+          obj3.setAttribute("visible",false);
+          state = 1;
+          story.textContent = "Step 2 — The jellyfish begins to take shape.";
+        }
+        else if(state===1){
+          obj2.setAttribute("visible",false);
+          obj3.setAttribute("visible",true);
+          state = 2;
+          story.textContent = "Step 3 — The jellyfish is fully grown. The ocean awaits...";
+          unlockOcean();
+        }
+        else{
+          obj3.setAttribute("visible",false);
+          obj1.setAttribute("visible",true);
+          obj2.setAttribute("visible",false);
+          state = 0;
+          story.textContent = "Step 1 — A glowing seed reappears.";
+        }
+      });
+
+      // unlock second marker visually
+      function unlockOcean(){
+        if(oceanUnlocked) return;
+        oceanUnlocked = true;
+        markerOcean.setAttribute("visible",true);
+        lockTxt.textContent = "UNLOCKED ✓";
+        story.textContent = "Ocean Realm Unlocked — Scan the second marker to summon the fish.";
+        console.log("OCEAN UNLOCKED");
       }
-    });
-
-    function unlockOcean(){
-      if(oceanUnlocked) return;
-      oceanUnlocked=true; lockTxt.textContent="UNLOCKED ✓";
-      markerOcean.setAttribute("visible",true);
-      console.log("🌊 OCEAN ACTIVE — scan it now");
-    }
     </script>
-
+    
   </body>
 </html>

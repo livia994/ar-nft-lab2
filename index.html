@@ -1,218 +1,340 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8"/>
+<head>
+    <meta charset="utf-8" />
+
     <title>Blooming Worlds – AR NFT Project</title>
 
-    <!-- AFRAME -->
+    <!-- AFRAME LIBRARY -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 
-    <!-- AR.js NFT -->
+    <!-- AR.js NFT Tracking -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar-nft.js"></script>
 
     <style>
-      body { margin:0; overflow:hidden; font-family:system-ui; }
-      #ui {
-        position:fixed; top:10px; left:10px; width:auto;
-        padding:12px 16px; background:rgba(0,0,0,0.65); color:#fff;
-        border-radius:12px; z-index:10; max-width:340px;
-      }
-      #ui h1 {margin:0 0 4px; font-size:18px; font-weight:600;}
-      #ui p {margin:3px 0; font-size:13px;}
-      #ui small {opacity:.9; font-size:11px;}
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: system-ui;
+        }
+        #ui {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.65);
+            color: white;
+            border-radius: 12px;
+            max-width: 350px;
+            z-index: 10;
+        }
+        #ui h1 {
+            margin: 0 0 6px;
+            font-size: 19px;
+            font-weight: 700;
+        }
+        #ui p {
+            margin: 4px 0;
+            font-size: 13px;
+        }
+        #ui small {
+            font-size: 11px;
+            opacity: 0.8;
+        }
     </style>
-  </head>
-
-  <body>
-
-    <!-- On-screen Info UI -->
-    <div id="ui">
-      <h1>Blooming Worlds</h1>
-      <p><b>Main Marker:</b> FLO – the evolving jellyfish.</p>
-      <p><b>Second Marker:</b> Under – <span id="lockTxt">LOCKED</span></p>
-      <p id="story">Step 1 — A glowing seed ignites. Tap to evolve.</p>
-      <small>Scan FLO first. Under unlocks later.</small>
-    </div>
+</head>
 
 
-    <!-- ============ MAIN SCENE ============ -->
-    <a-scene
-      embedded
-      renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled:false"
-      device-orientation-permission-ui="enabled:false"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled:false;"
+
+
+<body>
+
+<!-- ------------------------------------------------------ -->
+<!-- 🟦 UI TEXT OVERLAY -->
+<!-- ------------------------------------------------------ -->
+
+<div id="ui">
+
+    <h1>BLOOMING WORLDS</h1>
+
+    <p><b>Marker 1:</b> FLO (Jelly) — evolves with tapping</p>
+    <p><b>Marker 2:</b> UNDER (Fish) — <span id="lockU">LOCKED</span></p>
+    <p><b>Marker 3:</b> OC (Turtle) — <span id="lockO">LOCKED</span></p>
+
+    <p id="story">
+        Step 1 — A glowing seed lies dormant, waiting for you.
+    </p>
+
+    <small>Progression: FLO → UNDER → OC</small>
+</div>
+
+
+
+
+
+
+<!-- ====================================================== -->
+<!-- 🟪  A-SCENE WITH NFT TRACKING ENABLED -->
+<!-- ====================================================== -->
+
+<a-scene
+    embedded
+    renderer="logarithmicDepthBuffer: true;"
+    vr-mode-ui="enabled: false;"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+>
+
+
+<!-- ====================================================== -->
+<!-- 🟥 MARKER #1 : FLO — EVOLUTION OBJECT -->
+<!-- ====================================================== -->
+
+<a-nft
+    id="markerFlo"
+    type="nft"
+    url="flo"
+    smooth="true"
+    smoothCount="10"
+    smoothTolerance="0.01"
+    smoothThreshold="5"
+    emitevents="true"
+>
+
+    <!-- ========== JELLYFISH PHASE 1 (seed glow) ========== -->
+    <a-entity
+        id="obj1"
+        visible="true"
+        position="0 4 0"
+        scale="6 6 6"
     >
-
-    <!-- ================= FLO MARKER ================= -->
-    <a-nft
-      id="markerFlo"
-      type="nft"
-      url="flo"
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance="0.01"
-      smoothThreshold="5"
-      emitevents="true"
-    >
-
-      <!-- STEP 1 -->
-      <a-entity id="obj1" position="0 4.2 0" scale="6 6 6" visible="true">
         <a-sphere radius="1.5" color="#66FFFF"
-          material="emissive:#33FFFF; emissiveIntensity:1.1;"
-          animation="property:scale; dir:alternate; dur:1500; loop:true;
-                     to:1.8 1.8 1.8; from:1 1 1"></a-sphere>
+            material="emissive: #33FFFF; emissiveIntensity: 1.1;"
+            animation="property: scale;
+                      dir: alternate;
+                      dur: 1500;
+                      loop: true;
+                      from: 1 1 1;
+                      to:   1.8 1.8 1.8;">
+        </a-sphere>
+    </a-entity>
 
-        <a-ring radius-inner="1.7" radius-outer="2.6" position="0 0 .3" color="#99FFEE"
-          material="emissive:#99FFEE; emissiveIntensity:.9; opacity:.7;"
-          animation="property:rotation; to:0 0 360; loop:true; dur:2200"></a-ring>
-      </a-entity>
 
-      <!-- STEP 2 -->
-      <a-entity id="obj2" position="0 3.2 0" scale="6 6 6" visible="false">
-        <a-sphere radius="2" position="0 .8 0" color="#2244FF"
-          material="opacity:.8; emissive:#7744FF; emissiveIntensity:1.1;"
-          animation="property:scale; dir:alternate; dur:1600; loop:true;
-                     to:1.3 1.15 1.3; from:1 1 1"></a-sphere>
+    <!-- ========== JELLYFISH PHASE 2 ========== -->
+    <a-entity
+        id="obj2"
+        visible="false"
+        position="0 3.2 0"
+        scale="6 6 6"
+    >
+        <a-sphere radius="2"
+                  position="0 0.8 0"
+                  color="#2244FF"
+                  material="opacity:0.8; emissive:#7744FF; emissiveIntensity:1.1;">
+        </a-sphere>
+    </a-entity>
 
-        <a-sphere radius=".9" position="0 .8 0" color="#88FFFF"
-          material="emissive:#AAFFEE; emissiveIntensity:1.3;"
-          animation="property:color; from:#88FFFF; to:#FF88FF; loop:true; dur:1400"></a-sphere>
 
-        <a-cylinder radius="0.1" height="4" position="0.6 -1.6 0" color="#66FFFF"
-          material="opacity:.9; emissive:#55FFFF;"
-          animation="property:rotation; dir:alternate; dur:1300; loop:true;
-                     to:0 30 20; from:0 -30 -20"></a-cylinder>
-
-        <a-cylinder radius="0.1" height="4.5" position="-0.55 -1.8 .3" color="#66CCFF"
-          material="opacity:.9; emissive:#55CCFF;"
-          animation="property:rotation; dir:alternate; dur:1500; loop:true;
-                     to:0 -25 15; from:0 25 -15"></a-cylinder>
-
-        <a-cylinder radius="0.1" height="4.2" position="0.1 -2.0 -.3" color="#AA88FF"
-          material="opacity:.9; emissive:#BB77FF;"
-          animation="property:rotation; dir:alternate; dur:1700; loop:true;
-                     to:20 20 -20; from:-20 -20 20"></a-cylinder>
-      </a-entity>
-
-      <!-- STEP 3 – full model -->
-      <a-entity id="obj3"
+    <!-- ========== JELLYFISH PHASE 3 (full glTF model) ========== -->
+    <a-entity
+        id="obj3"
+        visible="false"
         gltf-model="url(scene.gltf)"
         position="0 2 0"
         scale="20 20 20"
-        rotation="0 180 0"
+        animation="property: position;
+                  dir: alternate;
+                  dur: 2500;
+                  loop: true;
+                  from: 0 4.0 0;
+                  to:   0 4.7 0;">
+    </a-entity>
+
+</a-nft>
+
+
+
+
+
+
+<!-- ====================================================== -->
+<!-- 🟦 MARKER #2 : UNDER — FISH (UNLOCKED AFTER FLO) -->
+<!-- ====================================================== -->
+
+<a-nft
+    id="markerUnder"
+    type="nft"
+    url="under"
+    emitevents="true"
+>
+
+    <a-entity
+        id="fishObj"
         visible="false"
-        animation="property:position; dir:alternate; dur:2500; loop:true;
-                   to:0 4.7 0; from:0 4.0 0">
-      </a-entity>
-
-    </a-nft>
-
-
-
-    <!-- ========== SECOND MARKER - UNDER (FISH) ========== -->
-    <a-nft
-      id="markerUnder"
-      type="nft"
-      url="under"   <!-- MUST match under.fset / under.iset -->
-      smooth="true"
-      smoothCount="10"
-      smoothTolerance="0.01"
-      smoothThreshold="5"
-      emitevents="true"
-      visible="true"   <!-- marker itself is always active -->
-    >
-
-      <!-- Fish is hidden until unlocked -->
-      <a-entity id="fishObj"
         gltf-model="url(fish.gltf)"
+        position="0 1.2 0"
+        scale="900 900 900"
+        animation="property: position;
+                  dur: 2800;
+                  dir: alternate;
+                  loop: true;
+                  from: 0 0.8 -0.6;
+                  to:   0 2.0  0.6;">
+    </a-entity>
+
+</a-nft>
+
+
+
+
+
+
+<!-- ====================================================== -->
+<!-- 🟩 MARKER #3 : OC — TURTLE (UNLOCKS ONLY AFTER UNDER) -->
+<!-- ====================================================== -->
+
+<a-nft
+    id="markerOc"
+    type="nft"
+    url="oc"
+    emitevents="true"
+>
+
+    <a-entity
+        id="turtleObj"
+        visible="false"
+        gltf-model="url(turtle.gltf)"
         position="0 1.0 0"
         scale="900 900 900"
-        rotation="0 90 0"
-        visible="false"
-        animation__swim="property:position; dir:alternate; dur:2800; loop:true;
-                         to:0 2.2 .6; from:0 0.8 -.6">
-      </a-entity>
+        animation="property: rotation;
+                  dur: 9000;
+                  loop: true;
+                  from: 0 0 0;
+                  to:   0 360 0;">
+    </a-entity>
 
-    </a-nft>
-
-
-    <a-entity camera></a-entity>
-    </a-scene>
+</a-nft>
 
 
 
-    <!-- ======================= SCRIPT ======================= -->
-    <script>
-      let state = 0;
-      let floSeen = false;
-      let underUnlocked = false;
-      let lastTime = 0;
+<a-entity camera></a-entity>
+</a-scene>
 
-      const obj1 = document.querySelector("#obj1");
-      const obj2 = document.querySelector("#obj2");
-      const obj3 = document.querySelector("#obj3");
-      const fishObj = document.querySelector("#fishObj");
 
-      const story = document.querySelector("#story");
-      const lockTxt = document.querySelector("#lockTxt");
 
-      const markerFlo = document.querySelector("#markerFlo");
-      const markerUnder = document.querySelector("#markerUnder");
 
-      markerFlo.addEventListener("markerFound", ()=>{
-        floSeen = true;
-        console.log("FLO SCANNED");
-      });
 
-      markerUnder.addEventListener("markerFound", () => {
-        console.log("UNDER MARKER SEEN (fish unlocked? ", underUnlocked, ")");
-      });
 
-      // TAP → evolve Flo
-      document.body.addEventListener("click", ()=>{
-        if(!floSeen) return;
+<!-- ====================================================== -->
+<!-- 🔥 SCRIPT — FULL EXPLANATORY LOGIC, OPEN + CLEAR -->
+<!-- ====================================================== -->
 
-        const now = Date.now();
-        if(now-lastTime < 400) return;
-        lastTime = now;
+<script>
 
-        if(state===0){
-          obj1.setAttribute("visible",false);
-          obj2.setAttribute("visible",true);
-          obj3.setAttribute("visible",false);
-          state = 1;
-          story.textContent = "Step 2 — The jellyfish begins to take shape.";
-        }
-        else if(state===1){
-          obj2.setAttribute("visible",false);
-          obj3.setAttribute("visible",true);
-          state = 2;
-          story.textContent =
-            "Step 3 — The jellyfish is fully grown. The undersea world awakens...";
-          unlockUnder();
-        }
-        else{
-          obj3.setAttribute("visible",false);
-          obj1.setAttribute("visible",true);
-          obj2.setAttribute("visible",false);
-          state = 0;
-          story.textContent = "Step 1 — A glowing seed reappears.";
-        }
-      });
+// ------- GAME STATE TRACKING ------- //
+let evolutionStep = 0;       // controls jelly cycles
+let fishUnlocked   = false;  // becomes true only after step 3
+let turtleUnlocked = false;  // becomes true only after UNDER seen
 
-      // unlock second marker visually & show fish
-      function unlockUnder(){
-        if(underUnlocked) return;
-        underUnlocked = true;
 
-        fishObj.setAttribute("visible", true);   // <— THIS actually shows the fish
+// ------- UI elements ------- //
+const story   = document.querySelector("#story");
+const lockU   = document.querySelector("#lockU");
+const lockO   = document.querySelector("#lockO");
 
-        lockTxt.textContent = "UNLOCKED ✓";
+
+// ------- Jelly entity references ------- //
+const obj1 = document.querySelector("#obj1");
+const obj2 = document.querySelector("#obj2");
+const obj3 = document.querySelector("#obj3");
+
+
+// ------- Fish & Turtle entity references ------- //
+const fishObj   = document.querySelector("#fishObj");
+const turtleObj = document.querySelector("#turtleObj");
+
+
+
+
+// 🚀 Tap screen = evolve the FLO jelly
+document.body.addEventListener("click", function(){
+
+    if (evolutionStep === 0) {
+        // Phase 1 → Phase 2
+        obj1.setAttribute("visible", false);
+        obj2.setAttribute("visible", true);
+
+        evolutionStep = 1;
+        story.textContent = "Step 2 — Something stirs beneath the shimmer.";
+    }
+
+    else if (evolutionStep === 1) {
+        // Phase 2 → Phase 3 (final)
+        obj2.setAttribute("visible", false);
+        obj3.setAttribute("visible", true);
+
+        unlockFish();     // call below
+
+        evolutionStep = 2;
+        story.textContent = "Step 3 — A life awakens — the ocean responds.";
+    }
+
+    else if (evolutionStep === 2) {
+        // Reset cycle back to beginning
+        obj3.setAttribute("visible", false);
+        obj1.setAttribute("visible", true);
+
+        evolutionStep = 0;
+        fishUnlocked   = false;
+        turtleUnlocked = false;
+
+        fishObj.setAttribute("visible", false);
+        turtleObj.setAttribute("visible", false);
+
+        lockU.textContent = "LOCKED";
+        lockO.textContent = "LOCKED";
+
+        story.textContent = "Cycle begins again — rebirth from a single spark.";
+    }
+});
+
+
+
+
+// 🌊 Unlock FISH (Marker #2)
+function unlockFish(){
+    if (fishUnlocked) return;
+
+    fishUnlocked = true;
+
+    fishObj.setAttribute("visible", true);
+    lockU.textContent = "UNLOCKED ✓";
+
+    story.textContent =
+        "The sea opens — shimmering fins slice through the water.";
+}
+
+
+
+
+// 🐢 Unlock TURTLE (Marker #3)
+// Only activates AFTER Under (Fish) is unlocked
+document.querySelector("#markerUnder")
+        .addEventListener("markerFound", function(){
+
+    if (fishUnlocked && turtleUnlocked === false) {
+
+        turtleUnlocked = true;
+
+        turtleObj.setAttribute("visible", true);
+        lockO.textContent = "UNLOCKED ✓";
+
         story.textContent =
-          "Undersea Realm Unlocked — Scan the UNDER marker to watch the fish swim.";
-        console.log("UNDER UNLOCKED");
-      }
-    </script>
-  </body>
+            "Final Gate Opens — From the deep comes an ancient turtle guardian.";
+    }
+});
+
+</script>
+
+
+</body>
 </html>

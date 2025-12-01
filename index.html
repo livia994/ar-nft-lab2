@@ -110,27 +110,28 @@
 
 
 
-    <!-- ================= SECOND MARKER - UNDER (LOCKED) ================= -->
+    <!-- ========== SECOND MARKER - UNDER (FISH) ========== -->
     <a-nft
       id="markerUnder"
       type="nft"
-      url="under"   <!-- must match under.fset / under.iset -->
+      url="under"   <!-- MUST match under.fset / under.iset -->
       smooth="true"
       smoothCount="10"
       smoothTolerance="0.01"
       smoothThreshold="5"
       emitevents="true"
-      visible="false"   <!-- HIDDEN UNTIL FLO UNLOCKS -->
+      visible="true"   <!-- marker itself is always active -->
     >
 
+      <!-- Fish is hidden until unlocked -->
       <a-entity id="fishObj"
         gltf-model="url(fish.gltf)"
-        position="0 1.5 0"
-        scale="40 40 40"
+        position="0 1.0 0"
+        scale="30 30 30"
         rotation="0 90 0"
-        visible="true"
+        visible="false"
         animation__swim="property:position; dir:alternate; dur:2800; loop:true;
-                         to:0 2.6 .5; from:0 1.4 -.5">
+                         to:0 2.2 .6; from:0 0.8 -.6">
       </a-entity>
 
     </a-nft>
@@ -151,6 +152,8 @@
       const obj1 = document.querySelector("#obj1");
       const obj2 = document.querySelector("#obj2");
       const obj3 = document.querySelector("#obj3");
+      const fishObj = document.querySelector("#fishObj");
+
       const story = document.querySelector("#story");
       const lockTxt = document.querySelector("#lockTxt");
 
@@ -160,6 +163,10 @@
       markerFlo.addEventListener("markerFound", ()=>{
         floSeen = true;
         console.log("FLO SCANNED");
+      });
+
+      markerUnder.addEventListener("markerFound", () => {
+        console.log("UNDER MARKER SEEN (fish unlocked? ", underUnlocked, ")");
       });
 
       // TAP → evolve Flo
@@ -181,7 +188,8 @@
           obj2.setAttribute("visible",false);
           obj3.setAttribute("visible",true);
           state = 2;
-          story.textContent = "Step 3 — The jellyfish is fully grown. The undersea world awakens...";
+          story.textContent =
+            "Step 3 — The jellyfish is fully grown. The undersea world awakens...";
           unlockUnder();
         }
         else{
@@ -193,13 +201,16 @@
         }
       });
 
-      // unlock second marker visually
+      // unlock second marker visually & show fish
       function unlockUnder(){
         if(underUnlocked) return;
         underUnlocked = true;
-        markerUnder.setAttribute("visible",true);
+
+        fishObj.setAttribute("visible", true);   // <— THIS actually shows the fish
+
         lockTxt.textContent = "UNLOCKED ✓";
-        story.textContent = "Undersea Realm Unlocked — Scan the second marker to summon the fish.";
+        story.textContent =
+          "Undersea Realm Unlocked — Scan the UNDER marker to watch the fish swim.";
         console.log("UNDER UNLOCKED");
       }
     </script>

@@ -192,15 +192,15 @@
       </a-nft>
 
       <a-nft id="markerOc" type="nft" url="oc" emitevents="true">
-        <a-entity
-          id="turtleObj"
-          visible="false"
-          gltf-model="url(turtle.gltf)"
-          position="0 1.0 0"
-          scale="100 100 100"
-          animation="property: rotation; to: 0 360 0; dur: 9000; loop: true"
-        ></a-entity>
-      </a-nft>
+      <a-entity gltf-model="url(turtle.gltf)"
+          scale="700 700 700"
+          position="0 1 0"
+          rotation="0 90 0">
+
+      <a-entity light="type:ambient; intensity:1"></a-entity>
+      <a-entity light="type:directional; intensity:1" position="2 4 1"></a-entity>
+
+      </a-entity>
 
       <a-entity camera></a-entity>
     </a-scene>

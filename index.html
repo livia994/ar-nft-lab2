@@ -29,9 +29,9 @@
     <div id="ui">
       <h1>Blooming Worlds</h1>
       <p><b>Main Marker:</b> FLO – the evolving jellyfish.</p>
-      <p><b>Second Marker:</b> Ocean – <span id="lockTxt">LOCKED</span></p>
+      <p><b>Second Marker:</b> Under – <span id="lockTxt">LOCKED</span></p>
       <p id="story">Step 1 — A glowing seed ignites. Tap to evolve.</p>
-      <small>Scan FLO first. Ocean unlocks later.</small>
+      <small>Scan FLO first. Under unlocks later.</small>
     </div>
 
 
@@ -110,11 +110,11 @@
 
 
 
-    <!-- ================= SECOND MARKER - OCEAN (LOCKED) ================= -->
+    <!-- ================= SECOND MARKER - UNDER (LOCKED) ================= -->
     <a-nft
-      id="markerOcean"
+      id="markerUnder"
       type="nft"
-      url="ocean"
+      url="under"   <!-- must match under.fset / under.iset -->
       smooth="true"
       smoothCount="10"
       smoothTolerance="0.01"
@@ -145,7 +145,7 @@
     <script>
       let state = 0;
       let floSeen = false;
-      let oceanUnlocked = false;
+      let underUnlocked = false;
       let lastTime = 0;
 
       const obj1 = document.querySelector("#obj1");
@@ -155,7 +155,7 @@
       const lockTxt = document.querySelector("#lockTxt");
 
       const markerFlo = document.querySelector("#markerFlo");
-      const markerOcean = document.querySelector("#markerOcean");
+      const markerUnder = document.querySelector("#markerUnder");
 
       markerFlo.addEventListener("markerFound", ()=>{
         floSeen = true;
@@ -181,8 +181,8 @@
           obj2.setAttribute("visible",false);
           obj3.setAttribute("visible",true);
           state = 2;
-          story.textContent = "Step 3 — The jellyfish is fully grown. The ocean awaits...";
-          unlockOcean();
+          story.textContent = "Step 3 — The jellyfish is fully grown. The undersea world awakens...";
+          unlockUnder();
         }
         else{
           obj3.setAttribute("visible",false);
@@ -194,13 +194,13 @@
       });
 
       // unlock second marker visually
-      function unlockOcean(){
-        if(oceanUnlocked) return;
-        oceanUnlocked = true;
-        markerOcean.setAttribute("visible",true);
+      function unlockUnder(){
+        if(underUnlocked) return;
+        underUnlocked = true;
+        markerUnder.setAttribute("visible",true);
         lockTxt.textContent = "UNLOCKED ✓";
-        story.textContent = "Ocean Realm Unlocked — Scan the second marker to summon the fish.";
-        console.log("OCEAN UNLOCKED");
+        story.textContent = "Undersea Realm Unlocked — Scan the second marker to summon the fish.";
+        console.log("UNDER UNLOCKED");
       }
     </script>
   </body>
